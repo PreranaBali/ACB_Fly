@@ -1,1 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Syncopate:wght@400;700&display=swap');
+
+/* 1. Initialize Tailwind v4 */
 @import "tailwindcss";
+
+/* 2. Define Custom Theme Variables directly here */
+@theme {
+  --font-head: "Syncopate", sans-serif;
+  --font-body: "Space Grotesk", sans-serif;
+
+  --color-bg: #050505;
+  --color-accent: #00ffcc;
+}
+
+/* 3. Base Styles */
+/* Note: In v4, we don't need @layer base for simple root overrides, 
+   but it helps keep things organized. */
+@layer base {
+  body {
+    background-color: var(--color-bg);
+    color: white;
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Force Syncopate on all headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-head);
+  }
+}
+
+/* 4. Utilities & Custom Classes */
+:root {
+  --cursor-size: 40px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* Cursor Styles */
+.cursor-outer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--cursor-size);
+  height: var(--cursor-size);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  mix-blend-mode: difference;
+}
+
+.cursor-inner {
+  width: 6px;
+  height: 6px;
+  background: var(--color-accent);
+  border-radius: 50%;
+}
+
+@media (hover: none) {
+  .cursor-outer { display: none; }
+  body { cursor: auto; }
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}

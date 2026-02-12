@@ -1,9 +1,61 @@
-function App() {
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import Lenis from 'lenis';
+
+// Components
+import Navbar from './components/Navbar';
+import Cursor from './components/Cursor'; // Import the new cursor
+import Home from './pages/Home';
+import Safety from './pages/Safety';
+import Service from './pages/Service';
+import Terms from './pages/Terms';
+
+const AppContent = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smooth: true,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => lenis.destroy();
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
   return (
     <>
-      App
+      {/* Use the new Cursor Component here */}
+      <Cursor />
+      
+      <Navbar />
+      
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/safety" element={<Safety />} />
+        <Route path="/service" element={<Service />} />
+        <Route path="/terms" element={<Terms />} />
+      </Routes>
     </>
-  )
-}
+  );
+};
 
-export default App
+const App = () => {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  );
+};
+
+export default App;
