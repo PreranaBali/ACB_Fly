@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Safety from './pages/Safety';
 import Service from './pages/Service';
 import Terms from './pages/Terms';
+//Test
 
 const AppContent = () => {
   const location = useLocation();
