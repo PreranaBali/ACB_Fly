@@ -5,10 +5,10 @@ import Lenis from 'lenis';
 // Components
 import Navbar from './components/Navbar';
 import Cursor from './components/Cursor'; // Import the new cursor
-import Home from './pages/Home';
-import Safety from './pages/Safety';
-import Service from './pages/Service';
-import Terms from './pages/Terms';
+import Home from './Pages/Home';
+import Safety from './Pages/Safety';
+import Service from './Pages/Service';
+import Terms from './Pages/Terms';
 //Test
 
 const AppContent = () => {
