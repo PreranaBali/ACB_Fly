@@ -9,6 +9,7 @@ import Home from './Pages/Home';
 import Safety from './Pages/Safety';
 import Service from './Pages/Service';
 import Terms from './Pages/Terms';
+import Profile from './Pages/Profile';
 //Test
 import Login from './Pages/Login';
 
@@ -48,6 +49,7 @@ const AppContent = () => {
         <Route path="/safety" element={<Safety />} />
         <Route path="/service" element={<Service />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </>
   );

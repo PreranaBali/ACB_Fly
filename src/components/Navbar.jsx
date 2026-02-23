@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
@@ -53,24 +52,17 @@ const Navbar = () => {
           </button>
         ) : (
           <div className="flex items-center gap-4">
-            {/* User Info */}
-            <div className="flex items-center gap-2">
-              {user.photoURL && (
-                <img
-                  src={user.photoURL}
-                  alt="profile"
-                  className="w-8 h-8 rounded-full border border-white/20"
-                />
-              )}
-              <span className="text-white text-sm font-medium">
-                {user.displayName}
-              </span>
-            </div>
-
-            {/* Logout */}
+            <img
+              src={user.photoURL}
+              alt="profile"
+              className="w-8 h-8 rounded-full"
+            />
+            <span className="text-white text-sm">
+              {user.displayName}
+            </span>
             <button
               onClick={logout}
-              className="text-xs text-red-400 hover:text-red-600 transition"
+              className="text-xs text-red-400 hover:text-red-600"
             >
               Logout
             </button>
