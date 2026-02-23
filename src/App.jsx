@@ -10,6 +10,7 @@ import Safety from './Pages/Safety';
 import Service from './Pages/Service';
 import Terms from './Pages/Terms';
 //Test
+import Login from './Pages/Login';
 
 const AppContent = () => {
   const location = useLocation();
@@ -43,6 +44,7 @@ const AppContent = () => {
       
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/safety" element={<Safety />} />
         <Route path="/service" element={<Service />} />
         <Route path="/terms" element={<Terms />} />
