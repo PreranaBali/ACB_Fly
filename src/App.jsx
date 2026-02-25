@@ -10,6 +10,7 @@ import Safety from './Pages/Safety';
 import Service from './Pages/Service';
 import Terms from './Pages/Terms';
 import Profile from './Pages/Profile';
+import ServiceBooking from './Pages/Service_booking';
 //Test
 import Login from './Pages/Login';
 
@@ -50,6 +51,7 @@ const AppContent = () => {
         <Route path="/service" element={<Service />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/Service_booking" element={<ServiceBooking/>}/>
       </Routes>
     </>
   );
