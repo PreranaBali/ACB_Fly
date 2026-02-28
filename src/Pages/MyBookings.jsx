@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom"; 
-
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 const MyBookings = () => {
   const { user } = useAuth();
   const navigate = useNavigate(); 
@@ -24,7 +24,7 @@ const MyBookings = () => {
         setLoading(true);
         const token = await user.getIdToken();
         
-        const res = await fetch("http://localhost:8000/api/bookings/my-bookings", {
+        const res = await fetch(`${BASE_URL}/api/bookings/my-bookings`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`

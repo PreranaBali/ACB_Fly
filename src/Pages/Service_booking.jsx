@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"; // 🔥 Added navigation hook
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap, Polyline } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 // 🎨 Professional Aviation Icons (Unchanged)
 const lzIcon = new L.DivIcon({
@@ -96,7 +97,7 @@ const ServiceBooking = () => {
 
   const fetchLiveFleet = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/pilots/live"); 
+      const res = await fetch(`${BASE_URL}/api/pilots/live`); 
       if (!res.ok) return;
       const data = await res.json();
       if (data.pilots && data.pilots.length > 0) {
@@ -160,7 +161,7 @@ const ServiceBooking = () => {
       const token = await user.getIdToken();
       const payload = { ...bookingData, totalPrice, lat: userLoc.lat, lon: userLoc.lon };
 
-      const res = await fetch("http://localhost:8000/api/bookings", {
+      const res = await fetch(`${BASE_URL}/api/bookings`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify(payload),
@@ -192,7 +193,7 @@ const ServiceBooking = () => {
 
   const pollFlightLocation = async (aircabId) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/pilots/${aircabId}/location`);
+      const res = await fetch(`${BASE_URL}/api/pilots/${aircabId}/location`);
       if (res.ok) {
         const data = await res.json();
         setLiveAircabLoc(data.pilot.current_location);
@@ -229,7 +230,7 @@ const ServiceBooking = () => {
 
   // ✅ If user IS logged in, render the main terminal
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-slate-300 font-sans p-4 pb-32">
+    <div className="min-h-screen bg-[#0a0a0a] text-slate-300 font-sans p-4 pb-32 mt-15">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         .pro-card { background: #111; border: 1px solid #222; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5); }

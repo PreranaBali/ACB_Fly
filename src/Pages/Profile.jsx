@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 const Profile = () => {
   const { user } = useAuth();
   const [profile, setProfile] = useState(null);
@@ -31,7 +32,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const token = await getToken();
-        const res = await fetch("http://localhost:8000/api/profile", {
+        const res = await fetch(`${BASE_URL}/api/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("Connection Failure");
@@ -113,7 +114,7 @@ const Profile = () => {
         location,
         paymentMethods: localPaymentMethods,
       };
-      const res = await fetch("http://localhost:8000/api/profile", {
+      const res = await fetch(`${BASE_URL}/api/profile`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(payload),

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 // 🚁 Professional Pilot Icon for the Map
 const pilotIcon = new L.DivIcon({
   html: `<div style="font-size: 24px; filter: drop-shadow(0 0 8px #3b82f6); background: rgba(59,130,246,0.2); border: 2px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; animation: pulse 2s infinite;">🚁</div>`,
@@ -54,7 +54,7 @@ const PilotDashboard = () => {
 
           // Ping Backend!
           try {
-            await fetch("http://localhost:8000/api/pilots/telemetry", {
+            await fetch(`${BASE_URL}/api/pilots/telemetry`, {
               method: "PUT",
               headers: { 
                 "Content-Type": "application/json",
@@ -95,8 +95,8 @@ const PilotDashboard = () => {
 
     try {
       const endpoint = authMode === "login" 
-        ? "http://localhost:8000/api/pilots/login" 
-        : "http://localhost:8000/api/pilots/register";
+        ? `${BASE_URL}/api/pilots/login` 
+        : `${BASE_URL}/api/pilots/register`;
 
       const payload = authMode === "login" 
         ? { username: authForm.username, password: authForm.password }
@@ -145,8 +145,8 @@ const PilotDashboard = () => {
     try {
       setLoading(true);
       const endpoint = viewMode === "available" 
-        ? "http://localhost:8000/api/pilots/available-jobs"
-        : "http://localhost:8000/api/pilots/my-jobs";
+        ? `${BASE_URL}/api/pilots/available-jobs`
+        : `${BASE_URL}/api/pilots/my-jobs`;
 
       const res = await fetch(endpoint, {
         method: "GET",
@@ -174,7 +174,7 @@ const PilotDashboard = () => {
   const acceptJob = async (bookingId) => {
     try {
       setStatusMsg({ type: "info", text: "⏳ Accepting job..." });
-      const res = await fetch(`http://localhost:8000/api/pilots/jobs/${bookingId}/accept`, {
+      const res = await fetch(`${BASE_URL}/api/pilots/jobs/${bookingId}/accept`, {
         method: "POST",
         headers: { "Authorization": `Bearer ${pilotToken}` },
       });
@@ -192,7 +192,7 @@ const PilotDashboard = () => {
   const updateJobStatus = async (bookingId, newStatus) => {
     try {
       setStatusMsg({ type: "info", text: "⏳ Updating status..." });
-      const res = await fetch(`http://localhost:8000/api/pilots/jobs/${bookingId}/status?status=${newStatus}`, {
+      const res = await fetch(`${BASE_URL}/api/pilots/jobs/${bookingId}/status?status=${newStatus}`, {
         method: "PATCH",
         headers: { "Authorization": `Bearer ${pilotToken}` },
       });
