@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom"; // 🔥 Added navigation hook
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap, Polyline } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// 🎨 Professional Aviation Icons
+// 🎨 Professional Aviation Icons (Unchanged)
 const lzIcon = new L.DivIcon({
   html: `<div style="font-size: 28px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));">🎯</div>`,
   className: "custom-leaflet-icon",
@@ -33,7 +34,7 @@ const activeAircabIcon = new L.DivIcon({
   iconAnchor: [22, 22],
 });
 
-// 🔥 Perfectly handles zooming and resizing without lagging
+// 🔥 MapUpdater (Unchanged)
 const MapUpdater = ({ center, zoomLevel, isFullscreen }) => {
   const map = useMap();
   
@@ -44,8 +45,6 @@ const MapUpdater = ({ center, zoomLevel, isFullscreen }) => {
   }, [center, zoomLevel, map]);
 
   useEffect(() => {
-    // A slight delay guarantees the browser has painted the fullscreen box 
-    // before Leaflet calculates the new center coordinates.
     const timeout = setTimeout(() => {
       map.invalidateSize();
       if (center) map.setView(center, zoomLevel);
@@ -58,6 +57,7 @@ const MapUpdater = ({ center, zoomLevel, isFullscreen }) => {
 
 const ServiceBooking = () => {
   const { user } = useAuth();
+  const navigate = useNavigate(); // 🔥 Initialize navigation
   
   const [minDate, setMinDate] = useState("");
   const [bookingData, setBookingData] = useState({
@@ -96,15 +96,15 @@ const ServiceBooking = () => {
 
   const fetchLiveFleet = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/drones/live"); 
+      const res = await fetch("http://localhost:8000/api/pilots/live"); 
       if (!res.ok) return;
       const data = await res.json();
-      if (data.drones && data.drones.length > 0) {
-        setNearbyFleet(data.drones.map(d => ({ 
-          id: d.drone_id, 
-          lat: d.current_location.lat, 
-          lon: d.current_location.lon,
-          status: d.status 
+      if (data.pilots && data.pilots.length > 0) {
+        setNearbyFleet(data.pilots.map(p => ({ 
+          id: p.pilot_id, 
+          lat: p.current_location.lat, 
+          lon: p.current_location.lon,
+          status: p.status 
         })));
       } else {
         setNearbyFleet([]); 
@@ -113,11 +113,14 @@ const ServiceBooking = () => {
   };
 
   useEffect(() => {
-    const today = new Date().toISOString().split("T")[0];
-    setMinDate(today);
-    fetchLiveFleet();
+    // Only fetch fleet and set dates if user is logged in
+    if (user) {
+      const today = new Date().toISOString().split("T")[0];
+      setMinDate(today);
+      fetchLiveFleet();
+    }
     return () => clearInterval(trackingInterval.current);
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const selectedService = priceChart[bookingData.serviceType];
@@ -166,10 +169,10 @@ const ServiceBooking = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || "Dispatch rejected.");
       
-      if (data.drone_id) {
-        setStatus({ type: "success", text: `🚨 AIRCAB ${data.drone_id} DISPATCHED TO LZ.` });
-        setActiveFlight({ id: data.drone_id, eta: data.eta, bookingId: data.booking_id });
-        startLiveTracking(data.drone_id);
+      if (data.pilot_uid) {
+        setStatus({ type: "success", text: `🚨 AIRCAB ${data.pilot_uid} DISPATCHED TO LZ.` });
+        setActiveFlight({ id: data.pilot_uid, eta: data.eta, bookingId: data.booking_id });
+        startLiveTracking(data.pilot_uid);
       } else {
         setStatus({ type: "success", text: `✅ Scheduled Flight Logged (ID: ${data.booking_id}). Awaiting Pilot Assignment.` });
         setBookingData({ ...bookingData, date: "", time: "", quantity: 0 });
@@ -189,10 +192,10 @@ const ServiceBooking = () => {
 
   const pollFlightLocation = async (aircabId) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/drones/${aircabId}`);
+      const res = await fetch(`http://localhost:8000/api/pilots/${aircabId}/location`);
       if (res.ok) {
         const data = await res.json();
-        setLiveAircabLoc(data.drone.current_location);
+        setLiveAircabLoc(data.pilot.current_location);
       }
     } catch (err) { console.error("Telemetry lost", err); }
   };
@@ -200,6 +203,31 @@ const ServiceBooking = () => {
   const currentZoom = activeFlight ? 15 : (userLoc ? 14 : 5);
   const currentCenter = liveAircabLoc || userLoc || defaultCenter;
 
+  // 🛑 SECURITY CHECK: If user is NOT logged in, block access!
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center p-4 font-sans text-center">
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        `}</style>
+        <div className="max-w-md w-full bg-[#111] border border-[#222] rounded-xl p-8 shadow-2xl">
+          <span className="text-5xl block mb-4">🔒</span>
+          <h2 className="text-2xl text-white font-bold mb-2 tracking-tight">Terminal Locked</h2>
+          <p className="text-sm text-slate-400 mb-8 leading-relaxed">
+            You must be authenticated to access the dispatch terminal and schedule flight operations.
+          </p>
+          <button
+            onClick={() => navigate("/login")}
+            className="w-full px-6 py-3 border border-blue-500 text-blue-400 text-sm font-bold uppercase tracking-wider hover:bg-blue-600 hover:text-white transition-colors rounded-lg"
+          >
+            Authenticate Now
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ If user IS logged in, render the main terminal
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-slate-300 font-sans p-4 pb-32">
       <style>{`
@@ -218,10 +246,9 @@ const ServiceBooking = () => {
       `}</style>
 
       <div className="max-w-2xl mx-auto pt-6" style={{ fontFamily: "'Inter', sans-serif" }}>
-        
         <h1 className="text-2xl font-bold text-white tracking-tight mb-4">Aircab Dispatch Terminal</h1>
 
-        {/* 🔥 Fixed Fullscreen Wrapper */}
+        {/* Fullscreen Wrapper */}
         <div className={
           isFullscreen 
             ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] bg-[#0a0a0a] m-0 p-0 rounded-none border-none' 
@@ -246,9 +273,7 @@ const ServiceBooking = () => {
           )}
           
           <MapContainer center={defaultCenter} zoom={5} style={{ height: "100%", width: "100%" }} zoomControl={false}>
-            {/* Light Mode Map */}
             <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
-            
             <MapUpdater center={currentCenter} zoomLevel={currentZoom} isFullscreen={isFullscreen} />
 
             {userLoc && (
@@ -288,7 +313,6 @@ const ServiceBooking = () => {
 
         {status.text && <div className={`alert-box alert-${status.type}`}>{status.text}</div>}
 
-        {/* 🚨 ACTIVE FLIGHT DASHBOARD */}
         {activeFlight ? (
           <div className="pro-card border-red-900/50 bg-[#1a0505]">
             <div className="flex justify-between items-center mb-6">
@@ -301,13 +325,11 @@ const ServiceBooking = () => {
                 <p className="text-3xl text-white font-bold">{activeFlight.eta} <span className="text-lg text-red-400">MIN</span></p>
               </div>
             </div>
-            
             <button onClick={() => window.location.reload()} className="w-full py-3 bg-[#111] border border-red-900/50 text-slate-300 rounded-md text-xs font-bold uppercase hover:bg-[#222] transition-colors">
               Clear Terminal
             </button>
           </div>
         ) : (
-          /* DISPATCH FORM */
           <form onSubmit={handleDispatch}>
             <div className="pro-card">
               <label>Target Landing Zone (LZ)</label>
@@ -341,7 +363,6 @@ const ServiceBooking = () => {
                     </optgroup>
                   </select>
                 </div>
-
                 <div className="grid grid-cols-3 gap-3">
                   <div>
                     <label>Amount ({priceChart[bookingData.serviceType].unit})</label>

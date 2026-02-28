@@ -13,6 +13,7 @@ import Profile from './Pages/Profile';
 import ServiceBooking from './Pages/Service_booking';
 import PilotDashboard from './pages/PilotDashboard';
 import D from './Pages/D';
+import MyBookings from './Pages/MyBookings';
 //Test
 import Login from './Pages/Login';
 
@@ -53,9 +54,10 @@ const AppContent = () => {
         <Route path="/service" element={<Service />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/Service_booking" element={<ServiceBooking/>}/>
-        <Route path="/piolet" element={<PilotDashboard/>}/>
+        <Route path="/servicebookings" element={<ServiceBooking/>}/>
+        <Route path="/pilot" element={<PilotDashboard/>}/>
         <Route path="/D" element={<D/>}/>
+        <Route path="/mybookings" element={<MyBookings/>}/>
       </Routes>
     </>
   );
