@@ -12,6 +12,7 @@ import Terms from './Pages/Terms';
 import Profile from './Pages/Profile';
 import ServiceBooking from './Pages/Service_booking';
 import PilotDashboard from './pages/PilotDashboard';
+import D from './Pages/D';
 //Test
 import Login from './Pages/Login';
 
@@ -54,6 +55,7 @@ const AppContent = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/Service_booking" element={<ServiceBooking/>}/>
         <Route path="/piolet" element={<PilotDashboard/>}/>
+        <Route path="/D" element={<D/>}/>
       </Routes>
     </>
   );
