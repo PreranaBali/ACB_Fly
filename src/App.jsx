@@ -11,7 +11,7 @@ import Service from './Pages/Service';
 import Terms from './Pages/Terms';
 import Profile from './Pages/Profile';
 import ServiceBooking from './Pages/Service_booking';
-import PilotDashboard from './pages/PilotDashboard';
+import PilotDashboard from './Pages/PilotDashboard';
 import D from './Pages/D';
 import MyBookings from './Pages/MyBookings';
 //Test
