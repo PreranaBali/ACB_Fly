@@ -6,67 +6,67 @@ gsap.registerPlugin(ScrollTrigger);
 
 const safetyLevels = [
   {
-    id: "LVL_01",
-    title: "Pre-Flight Safety Checks",
+    id: "01",
+    title: "Pre-Flight Protocols",
     checks: [
-      { id: "A1", title: "HARDWARE", desc: "Inspect propellers, motors, and battery health before ignition." },
-      { id: "A2", title: "AVIONICS", desc: "Full diagnostic sync of GPS and onboard sensors." },
-      { id: "A3", title: "MET_DATA", desc: "Verified weather data clearance for safe flight window." },
-      { id: "A4", title: "AUTHORIZATION", desc: "Verification of approved flight permissions and airspace." }
+      { id: "A1", title: "Hardware Integrity", desc: "Rigorous inspection of propulsion systems, motor torque, and high-capacity battery cell health before every ignition." },
+      { id: "A2", title: "Avionics Diagnostic", desc: "Full-spectrum synchronization of dual-GPS arrays and secondary redundant sensors for pinpoint positioning." },
+      { id: "A3", title: "MET Data Clearance", desc: "Real-time atmospheric analysis and weather-window verification to ensure a 100% safe flight environment." },
+      { id: "A4", title: "Airspace Auth", desc: "Automated verification of approved flight corridors, government permissions, and temporary flight restrictions." }
     ],
     readout: [
-      "PROP_PITCH: NORM",
-      "BATT_CELLS: 4.2V/ea",
-      "GPS_SIGNAL: LOCKED",
-      "AUTH_CODE: ACB_229"
+      "PROP_PITCH: OPTIMAL",
+      "BATT_CELLS: 4.2V NOMINAL",
+      "GPS_SIGNAL: TRIPLE_LOCK",
+      "AUTH_CODE: ACB_2026_PROT"
     ]
   },
   {
-    id: "LVL_02",
-    title: "Certified Personnel",
+    id: "02",
+    title: "Elite Operations Team",
     checks: [
-      { id: "B1", title: "LICENSING", desc: "Operations exclusively handled by Licensed Drone Pilots." },
-      { id: "B2", title: "COMPLIANCE", desc: "Pilot training conducted strictly under DGCA Guidelines." },
-      { id: "B3", title: "SOP_MASTERY", desc: "Adherence to Standard Operating Procedures at all times." },
-      { id: "B4", title: "VISUAL_LINK", desc: "Maintenance of Full Control and Visual Line of Sight (VLOS)." }
+      { id: "B1", title: "Executive Licensing", desc: "Operations managed exclusively by DGCA-certified Commercial Drone Pilots with over 1,000+ logged hours." },
+      { id: "B2", title: "SOP Adherence", desc: "Strict maintenance of Standard Operating Procedures developed for zero-failure high-stakes environments." },
+      { id: "B3", title: "Visual Overwatch", desc: "Continuous Visual Line of Sight (VLOS) or certified remote telemetry monitoring by a dedicated ground station." },
+      { id: "B4", title: "Recurrent Training", desc: "Pilots undergo monthly simulation testing for emergency maneuver mastery and new airspace protocol updates." }
     ],
     readout: [
-      "DGCA_ID: VALID",
-      "PILOT_RATING: MASTER",
+      "DGCA_STATUS: VERIFIED",
+      "PILOT_RATING: ELITE",
       "SOP_SYNC: 100%",
-      "CONTROL: MANUAL_OVERRIDE"
+      "CONTROL: ACTIVE_OVERRIDE"
     ]
   },
   {
-    id: "LVL_03",
-    title: "Safe Flying Practices",
+    id: "03",
+    title: "Safe Corridor Practices",
     checks: [
-      { id: "C1", title: "GEO_FENCE", desc: "Operation limited to strictly permitted flying zones." },
-      { id: "C2", title: "NO_FLY_ZONE", desc: "Avoidance of airports, defense areas, and restricted zones." },
-      { id: "C3", title: "PUBLIC_DENSITY", desc: "Zero-flight protocol over crowds or busy urban roads." },
-      { id: "C4", title: "NPNT_HARDLOCK", desc: "Strict enforcement of the No Permission – No Takeoff rule." }
+      { id: "C1", title: "Geofence Hardlock", desc: "Flight paths are digitally restricted to strictly permitted executive air corridors with zero margin for drift." },
+      { id: "C2", title: "Sensitive Zone Bypass", desc: "Automatic hardware-level avoidance of airports, government facilities, and restricted defense sectors." },
+      { id: "C3", title: "Population Protocol", desc: "Zero-flight-over-crowd policy enforced via real-time satellite density mapping and AI computer vision." },
+      { id: "C4", title: "NPNT Enforcement", desc: "Strict 'No Permission – No Takeoff' firmware integration ensures no unit leaves the ground without authority." }
     ],
     readout: [
-      "ALTITUDE: < 400FT",
-      "ZONE_LOCK: GREEN",
-      "NPNT_STATUS: ENGAGED",
-      "GEOFENCE: ARMED"
+      "ALTITUDE: MSL < 400FT",
+      "ZONE_LOCK: SECURE",
+      "NPNT: FULLY_ENGAGED",
+      "GEOFENCE: ACTIVE"
     ]
   },
   {
-    id: "LVL_04",
-    title: "Data & Public Safety",
+    id: "04",
+    title: "Data & Public Privacy",
     checks: [
-      { id: "D1", title: "PRIVACY", desc: "Full respect for public privacy during recording operations." },
-      { id: "D2", title: "USAGE_LIMITS", desc: "Data utilization restricted to authorized client purposes." },
-      { id: "D3", title: "RISK_PROT", desc: "Comprehensive insurance coverage for all mission risks." },
-      { id: "D4", title: "E_TERMINATE", desc: "Instant operation termination protocols in emergencies." }
+      { id: "D1", title: "Privacy Shield", desc: "Proprietary blurring algorithms ensure public privacy and anonymity during all visual data acquisition missions." },
+      { id: "D2", title: "Data Custody", desc: "Mission assets are hardware-encrypted and restricted to authorized client stakeholders with multi-sig access." },
+      { id: "D3", title: "Liability Coverage", desc: "Comprehensive aerospace insurance protection for every mission, providing peace of mind for third-party risks." },
+      { id: "D4", title: "Instant Termination", desc: "Military-grade E-Stop protocols allow for immediate, controlled flight termination and parachute deployment." }
     ],
     readout: [
-      "PRIVACY_HASH: ENCRYPTED",
-      "INSURANCE: ACTIVE_VAL",
-      "E_STOP: STANDBY",
-      "AUDIT: PASSED"
+      "ENCRYPTION: AES_256",
+      "INSURANCE: PREMIUM_ACTIVE",
+      "E_STOP: SYSTEM_READY",
+      "AUDIT: COMPLIANCE_PASS"
     ]
   }
 ];
@@ -75,110 +75,131 @@ const Safety = () => {
   const containerRef = useRef(null);
 
   useLayoutEffect(() => {
-    // Reveal Animations
     const ctx = gsap.context(() => {
       gsap.utils.toArray('.reveal-section').forEach(section => {
         gsap.fromTo(section, 
-          { y: 50, opacity: 0 },
+          { y: 30, opacity: 0 },
           { 
-            y: 0, opacity: 1, duration: 0.8, ease: "power2.out",
-            scrollTrigger: { trigger: section, start: "top 85%" }
+            y: 0, opacity: 1, duration: 1.2, ease: "power2.out",
+            scrollTrigger: { trigger: section, start: "top 90%" }
           }
         );
       });
     }, containerRef);
-
     return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={containerRef} className="relative min-h-screen bg-[#050505] text-[#d1d5db] font-body pt-32 pb-20 overflow-hidden cursor-none">
-      
-      {/* --- BLUEPRINT GRID BACKGROUND --- */}
-      {/* Cyan Grid Lines */}
-      <div className="fixed inset-0 z-0 opacity-20 pointer-events-none" 
+    <div ref={containerRef} className="relative min-h-screen bg-[#F8F9FA] text-[#1a1a1a] pb-40 pt-28 md:pt-48 font-sans selection:bg-black selection:text-white">
+      {/* Importing Inter for better premium legibility */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+      `}</style>
+
+      {/* --- REFINED SUBTLE GRID --- */}
+      <div className="fixed inset-0 z-0 opacity-[0.04] pointer-events-none" 
         style={{ 
           backgroundImage: `
-            linear-gradient(rgba(0, 255, 204, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 255, 204, 0.1) 1px, transparent 1px)
+            linear-gradient(#000 1px, transparent 1px),
+            linear-gradient(90deg, #000 1px, transparent 1px)
           `,
-          backgroundSize: '40px 40px'
+          backgroundSize: '80px 80px'
         }}
       ></div>
 
-      {/* --- CONTAINER --- */}
-      <div className="relative z-10 max-w-[1400px] mx-auto px-[5%] md:px-[60px]">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
 
-        {/* HEADER */}
-        <header className="reveal-section border border-accent/30 p-8 mb-20 flex justify-between items-start relative bg-black/40 backdrop-blur-sm">
-          <div className="absolute -top-3 left-5 bg-[#050505] px-2 text-xs font-mono text-accent">
-            REF_DRWG: ACB-2026-SAF
-          </div>
-          <div>
-            <h1 className="font-head text-[clamp(2rem,4vw,3.5rem)] font-bold uppercase leading-none text-white">
-              Safety <span className="text-accent">Architecture</span>
-            </h1>
-            {/* Kept the yellow hint for the status line */}
-            <p className="font-mono text-[#ffcc00] text-xs mt-3 tracking-widest">
-              &gt;_ INITIALIZING PRE-FLIGHT PROTOCOLS // 2026_EDITION
-            </p>
-          </div>
-          <div className="hidden md:block font-mono text-[0.65rem] opacity-50 text-right leading-relaxed">
-            SCALE: 1:1 <br /> UNIT: METRIC <br /> AUTH: ACB_SYSTEMS
+        {/* --- HEADER --- */}
+        <header className="reveal-section mb-32">
+          <div className="flex flex-col md:flex-row justify-between items-end gap-12 border-b-2 border-gray-200 pb-16">
+            <div className="max-w-4xl">
+              <span className="text-xs font-black text-gray-400 uppercase tracking-[0.4em] mb-6 block">
+                Safety & Compliance Report // 2026_V4
+              </span>
+              <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] text-black">
+                Absolute <br /> <span className="text-gray-300">Safety Standards.</span>
+              </h1>
+              <p className="text-xl md:text-2xl text-gray-600 font-medium mt-10 leading-relaxed max-w-3xl">
+                Aircab Black operates with a zero-failure mandate. Our safety framework is architected for professionals who demand total reliability in every flight.
+              </p>
+            </div>
+            <div className="hidden lg:block text-right">
+              <div className="w-20 h-20 bg-black rounded-[1.5rem] flex items-center justify-center text-white text-3xl mb-6 ml-auto shadow-xl">🚁</div>
+              <p className="font-extrabold text-xs uppercase tracking-widest text-gray-400 leading-relaxed">
+                Standard: DGCA_Aviation_Rules <br /> Authority: Aircab_Systems_International
+              </p>
+            </div>
           </div>
         </header>
 
-        {/* SCHEMATIC LEVELS */}
-        <div className="flex flex-col gap-24">
+        {/* --- SAFETY LEVELS --- */}
+        <div className="flex flex-col gap-40">
           {safetyLevels.map((level) => (
-            <section key={level.id} className="reveal-section grid grid-cols-1 lg:grid-cols-[120px_1fr_300px] gap-10 relative items-start">
+            <section key={level.id} className="reveal-section grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
               
-              {/* Level Number */}
-              <div className="font-mono text-xl text-accent border-b lg:border-b-0 lg:border-r border-accent/30 pb-4 lg:pb-0 h-full">
-                {level.id}
+              {/* Level Indicator */}
+              <div className="lg:col-span-1 border-l-4 border-black pl-8 pt-2 h-full">
+                <span className="font-black text-sm tracking-widest text-gray-300 uppercase">Level</span>
+                <div className="text-5xl font-black leading-none mt-1">{level.id}</div>
               </div>
 
-              {/* Main Content */}
-              <div>
-                <h2 className="font-head text-2xl md:text-3xl text-white uppercase mb-8">{level.title}</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Grid of Checks */}
+              <div className="lg:col-span-8">
+                <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-16 text-black">{level.title}</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-16">
                   {level.checks.map((check) => (
-                    <div key={check.id} className="relative p-6 bg-white/5 border border-white/5 pl-6 hover:border-accent/30 transition-colors duration-300">
-                      {/* Left bar is Cyan (Main Theme) */}
-                      <div className="absolute top-0 left-0 w-1 h-full bg-accent"></div>
-                      
-                      {/* ID tag is Yellow (Subtle Hint) */}
-                      <h4 className="font-mono text-xs text-[#ffcc00] mb-2">[{check.id}] {check.title}</h4>
-                      <p className="text-sm text-gray-400 leading-relaxed">{check.desc}</p>
+                    <div key={check.id} className="group">
+                      <div className="flex items-center gap-4 mb-5">
+                        <span className="text-xs font-black text-white bg-black px-3 py-1 rounded-lg shadow-sm">{check.id}</span>
+                        <h4 className="text-lg font-black uppercase tracking-widest text-black">{check.title}</h4>
+                      </div>
+                      <p className="text-lg text-gray-600 font-medium leading-relaxed group-hover:text-black transition-colors duration-300">
+                        {check.desc}
+                      </p>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Data Readout Panel - Styled in Yellow for "Warning/Info" feel */}
-              <div className="bg-[#ffcc00]/5 border border-dashed border-[#ffcc00]/40 p-6 font-mono text-[0.7rem] text-[#ffcc00] h-fit">
-                <h5 className="border-b border-[#ffcc00]/40 pb-2 mb-4 font-bold tracking-widest">SYSTEM_CHECK_LOG</h5>
-                <ul className="space-y-2">
+              {/* System Readout Spec Panel */}
+              <div className="lg:col-span-3 bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.04)] self-start">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="w-2.5 h-2.5 rounded-full bg-black animate-pulse"></div>
+                  <h5 className="text-xs font-black text-black uppercase tracking-[0.2em]">Real-Time Sync</h5>
+                </div>
+                <ul className="space-y-6">
                   {level.readout.map((line, i) => (
-                    <li key={i}>- {line}</li>
+                    <li key={i} className="flex justify-between border-b border-gray-50 pb-3">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{line.split(":")[0]}</span>
+                      <span className="text-[10px] font-black text-black uppercase tracking-wider">{line.split(":")[1]}</span>
+                    </li>
                   ))}
                 </ul>
+                <div className="mt-10 pt-6 border-t border-gray-100">
+                  <p className="text-[10px] font-extrabold text-gray-300 uppercase tracking-widest italic">Auth_Status: Operational</p>
+                </div>
               </div>
 
             </section>
           ))}
         </div>
 
-        {/* FOOTER SEAL - Yellow */}
-        <footer className="reveal-section mt-24 pt-10 border-t border-accent/30 flex justify-between items-center">
-          <div className="font-mono text-xs text-gray-500">
-            ACBFLY // THE SKY IS A UTILITY <br />
-            <span className="text-accent">STATUS: SAFE_LEGAL_PROFESSIONAL</span>
+        {/* --- FOOTER BADGE --- */}
+        <footer className="reveal-section mt-48 pt-20 border-t-2 border-gray-200 flex flex-col md:flex-row justify-between items-center gap-16">
+          <div className="text-center md:text-left">
+            <p className="text-3xl font-black tracking-tighter text-black mb-2">Uncompromising Safety.</p>
+            <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.3em]">Built for those who value every second.</p>
           </div>
           
-          {/* Stamp/Seal in Yellow */}
-          <div className="border-2 border-[#ffcc00] p-4 text-center text-[#ffcc00] font-bold text-xs -rotate-3 uppercase tracking-widest hover:bg-[#ffcc00] hover:text-black transition-colors duration-300">
-            DGCA RULESET <br /> COMPLIANT
+          {/* Executive Certification Badge */}
+          <div className="group relative scale-110 md:scale-125">
+            <div className="absolute inset-0 bg-black blur-2xl opacity-5 group-hover:opacity-10 transition-opacity"></div>
+            <div className="relative border-[4px] border-black p-8 md:p-10 text-center bg-white shadow-2xl rounded-2xl -rotate-1 group-hover:rotate-0 transition-transform duration-500">
+              <p className="text-[11px] font-black uppercase tracking-[0.4em] mb-2 text-gray-400">Civil Aviation Authority</p>
+              <h3 className="text-3xl font-black text-black leading-none">DGCA COMPLIANT</h3>
+              <p className="text-[10px] font-bold text-gray-500 mt-4 uppercase tracking-widest">Official Certification #2026-BLACK-X77</p>
+            </div>
           </div>
         </footer>
 

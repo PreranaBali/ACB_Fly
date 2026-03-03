@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom"; 
+
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
 const MyBookings = () => {
   const { user } = useAuth();
   const navigate = useNavigate(); 
@@ -9,8 +11,6 @@ const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  // 🔥 New Filter State
   const [filter, setFilter] = useState("active"); // 'active' | 'past'
 
   useEffect(() => {
@@ -46,42 +46,36 @@ const MyBookings = () => {
     fetchMyBookings();
   }, [user]);
 
-  // 🎨 Status Color Helper
+  // 🎨 Premium Status Badge Helper
   const getStatusBadge = (status) => {
     switch(status) {
-      case "pending": return "bg-slate-800 text-slate-400 border-slate-700";
-      case "Accepted": return "bg-yellow-900/30 text-yellow-500 border-yellow-700/50";
-      case "in_progress": return "bg-blue-900/30 text-blue-400 border-blue-700/50";
-      case "Delivered": return "bg-green-900/30 text-green-500 border-green-700/50";
-      default: return "bg-slate-800 text-slate-400 border-slate-700";
+      case "pending": return "bg-[#F5F5F5] text-gray-500 border border-gray-200";
+      case "Accepted": return "bg-[#111] text-white shadow-md";
+      case "in_progress": return "bg-[#EBF4FF] text-[#0052CC] border border-[#BDE0FE]";
+      case "Delivered": return "bg-[#F0FFF4] text-[#008A27] border border-[#E0FFE8]";
+      default: return "bg-gray-100 text-gray-600 border border-gray-200";
     }
   };
 
-  // 🛑 SECURITY CHECK
+  // 🛑 SECURITY CHECK (Matching the new Dark Premium Login Screen)
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center p-4 font-sans text-center">
+      <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center p-6" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
         <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         `}</style>
-        <div className="max-w-md w-full bg-[#111] border border-[#222] rounded-xl p-8 shadow-2xl">
-          <span className="text-5xl block mb-4">🔒</span>
-          <h2 className="text-2xl text-white font-bold mb-2 tracking-tight">Access Denied</h2>
-          <p className="text-sm text-slate-400 mb-8 leading-relaxed">
-            You must be authenticated to view flight logs, track active dispatches, and manage your Aircab history.
-          </p>
-          <button
-            onClick={() => navigate("/login")}
-            className="w-full px-6 py-3 border border-blue-500 text-blue-400 text-sm font-bold uppercase tracking-wider hover:bg-blue-600 hover:text-white transition-colors rounded-lg"
-          >
-            Authenticate Now
-          </button>
+        <div className="w-16 h-16 bg-white rounded-2xl shadow-[0_0_40px_rgba(255,255,255,0.1)] flex items-center justify-center mb-6">
+          <span className="text-3xl">🚁</span>
         </div>
+        <h1 className="text-4xl font-extrabold mb-2 tracking-tight text-white">Aircab Black</h1>
+        <p className="text-gray-400 mb-10 text-center font-medium tracking-wide">Sign in to view your activity.</p>
+        <button onClick={() => navigate("/login")} className="w-full max-w-sm bg-white text-[#111] py-4 rounded-2xl font-bold text-lg hover:bg-gray-200 transition active:scale-95 shadow-[0_4px_20px_rgba(255,255,255,0.1)]">
+          Sign In
+        </button>
       </div>
     );
   }
 
-  // 🔥 Filter the bookings based on the active tab
   const filteredBookings = bookings.filter((booking) => {
     if (filter === "active") {
       return booking.status !== "Delivered";
@@ -91,123 +85,143 @@ const MyBookings = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-slate-300 font-sans p-4 pb-32 mt-15">
+    // Changed pt-10 to pt-28 md:pt-32 to clear the navbar, and added the premium font
+    <div className="min-h-screen bg-[#FAFAFA] text-[#111] pb-32 pt-28 md:pt-32" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        .history-card { background: #111; border: 1px solid #222; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5); transition: all 0.3s ease; }
-        .history-card.delivered { opacity: 0.75; border-color: #1a2e1a; background: #0c120c; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
       `}</style>
 
-      <div className="max-w-2xl mx-auto pt-6" style={{ fontFamily: "'Inter', sans-serif" }}>
+      <div className="max-w-2xl mx-auto px-5 md:px-0">
         
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-white tracking-tight">Flight Logs</h1>
-          <button onClick={() => window.location.reload()} className="text-xs bg-[#222] hover:bg-[#333] px-3 py-2 rounded text-white font-bold transition">
-            🔄 Refresh
+        {/* Page Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[#111] mb-1">Activity</h1>
+            <p className="text-gray-500 font-medium text-sm md:text-base">Your flight history and upcoming requests.</p>
+          </div>
+          <button onClick={() => window.location.reload()} className="w-12 h-12 bg-white rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.05)] text-lg hover:bg-gray-50 transition-colors active:scale-95 border border-gray-100 flex items-center justify-center">
+            🔄
           </button>
         </div>
 
-        {/* 🎛️ TABS FOR FILTERING */}
-        <div className="flex gap-2 mb-6 bg-[#111] p-1 rounded-lg border border-[#222]">
+        {/* 🎛️ Premium Segmented Control (Tabs) */}
+        <div className="flex bg-gray-200/60 p-1.5 rounded-2xl mb-8">
           <button 
             onClick={() => setFilter("active")}
-            className={`flex-1 py-2 rounded-md font-bold text-sm transition-all ${filter === "active" ? "bg-[#222] text-white shadow" : "text-slate-500 hover:text-slate-300"}`}
+            className={`flex-1 py-3.5 rounded-xl font-bold text-sm transition-all duration-300 ${filter === "active" ? "bg-white text-[#111] shadow-[0_2px_12px_rgba(0,0,0,0.08)]" : "text-gray-500 hover:text-[#111]"}`}
           >
-            Active Missions
+            Active Requests
           </button>
           <button 
             onClick={() => setFilter("past")}
-            className={`flex-1 py-2 rounded-md font-bold text-sm transition-all ${filter === "past" ? "bg-[#222] text-white shadow" : "text-slate-500 hover:text-slate-300"}`}
+            className={`flex-1 py-3.5 rounded-xl font-bold text-sm transition-all duration-300 ${filter === "past" ? "bg-white text-[#111] shadow-[0_2px_12px_rgba(0,0,0,0.08)]" : "text-gray-500 hover:text-[#111]"}`}
           >
             Past Flights
           </button>
         </div>
 
         {error && (
-          <div className="bg-red-900/20 border border-red-900/50 text-red-500 p-4 rounded-lg mb-6 text-sm font-bold">
-            ❌ {error}
+          <div className="bg-[#FFF0F0] border border-[#FFE0E0] text-[#D00000] p-4 rounded-2xl mb-6 text-sm font-semibold">
+            {error}
           </div>
         )}
 
+        {/* Content Area */}
         {loading ? (
-          <div className="text-center py-12 opacity-50 animate-pulse">
-            <span className="text-3xl block mb-2">📡</span>
-            Retrieving flight logs...
+          <div className="flex flex-col items-center justify-center py-20 opacity-60">
+            <div className="w-10 h-10 border-4 border-gray-200 border-t-[#111] rounded-full animate-spin mb-4"></div>
+            <p className="font-bold text-gray-400 uppercase tracking-widest text-xs">Syncing logs...</p>
           </div>
         ) : filteredBookings.length === 0 ? (
-          <div className="history-card text-center py-12">
-            <span className="text-4xl block mb-4 text-slate-600">📭</span>
-            <h2 className="text-xl text-white font-bold mb-2">
+          <div className="bg-white rounded-[32px] text-center py-16 px-6 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)]">
+            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-5">
+              <span className="text-4xl block text-gray-400">📭</span>
+            </div>
+            <h2 className="text-2xl font-extrabold mb-2 tracking-tight text-[#111]">
               {filter === "active" ? "No Active Flights" : "No Past Flights"}
             </h2>
-            <p className="text-sm opacity-60">
+            <p className="text-gray-500 font-medium">
               {filter === "active" 
-                ? "You have no pending or in-progress aircab services." 
-                : "You don't have any completed flights yet."}
+                ? "You don't have any flights currently in progress." 
+                : "Your completed trips will appear here."}
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {filteredBookings.map((booking) => (
-              // Apply special 'delivered' class if status is Delivered
-              <div key={booking.booking_id} className={`history-card ${booking.status === 'Delivered' ? 'delivered' : ''}`}>
+              <div 
+                key={booking.booking_id} 
+                className={`bg-white rounded-[24px] p-6 border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 ${booking.status === 'Delivered' ? 'opacity-80 hover:opacity-100' : ''}`}
+              >
                 
-                {/* Header */}
-                <div className="flex justify-between items-start mb-4 border-b border-[#222] pb-4">
-                  <div>
-                    <p className="text-[10px] text-blue-500 font-bold uppercase tracking-wider mb-1">{booking.booking_id}</p>
-                    <h2 className="text-lg text-white font-bold">{booking.service_type}</h2>
-                  </div>
-                  <div className="flex flex-col items-end gap-2">
-                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase border ${getStatusBadge(booking.status)}`}>
-                      {booking.status === 'Delivered' ? '✅ Delivered' : booking.status.replace("_", " ")}
-                    </span>
-                    <p className="text-sm font-bold text-white">₹{booking.total_price}</p>
-                  </div>
-                </div>
-
-                {/* Body */}
-                <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
-                  <div>
-                    <p className="text-[10px] text-[#888] uppercase mb-1 font-semibold">Scheduled For</p>
-                    <p className="font-bold text-slate-300">{booking.date} @ {booking.time}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-[#888] uppercase mb-1 font-semibold">Requirement</p>
-                    <p className="font-bold text-slate-300">{booking.quantity} Units</p>
-                  </div>
-                  <div className="col-span-2">
-                    <p className="text-[10px] text-[#888] uppercase mb-1 font-semibold">Destination LZ</p>
-                    <p className="text-slate-400 text-xs leading-relaxed">{booking.address}</p>
-                  </div>
-                </div>
-
-                {/* Footer Logic: Show different UI based on completion status */}
-                {booking.status === "Delivered" ? (
-                   <div className="mt-4 pt-4 border-t border-[#222]/50 text-center">
-                     <p className="text-xs text-green-600 font-bold uppercase tracking-widest">
-                       Mission Accomplished
-                     </p>
-                   </div>
-                ) : booking.pilot_uid ? (
-                  <div className="mt-4 pt-4 border-t border-[#222] flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-blue-900/30 border border-blue-500/30 flex items-center justify-center text-xl">
+                {/* Header Row */}
+                <div className="flex justify-between items-start mb-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-[#F9F9F9] rounded-2xl border border-gray-100 flex items-center justify-center text-2xl shadow-sm">
                       🚁
                     </div>
                     <div>
-                      <p className="text-[10px] text-blue-400 font-bold uppercase tracking-wider">Assigned Pilot</p>
-                      <p className="text-sm font-bold text-white">
-                        {booking.pilot_details?.name || booking.pilot_uid}
-                      </p>
-                      {booking.pilot_details?.phone && (
-                        <p className="text-xs text-slate-400">📞 {booking.pilot_details.phone}</p>
-                      )}
+                      <h2 className="text-xl font-extrabold tracking-tight text-[#111]">{booking.service_type}</h2>
+                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">ID: {booking.booking_id.slice(0, 8)}...</p>
                     </div>
                   </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-black tracking-tight text-[#111]">₹{booking.total_price}</p>
+                    <div className="mt-1.5">
+                      <span className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wide ${getStatusBadge(booking.status)}`}>
+                        {booking.status === 'Delivered' ? 'Completed' : booking.status.replace("_", " ")}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Body Details */}
+                <div className="bg-[#F9F9F9] rounded-2xl p-5 grid grid-cols-2 gap-5 mb-5 border border-gray-50">
+                  <div>
+                    <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1.5">Date & Time</p>
+                    <p className="font-bold text-sm text-[#111]">{booking.date} at {booking.time}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1.5">Requirement</p>
+                    <p className="font-bold text-sm text-[#111]">{booking.quantity} Units</p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1.5">Destination</p>
+                    <p className="text-sm font-bold text-[#111] truncate">{booking.address}</p>
+                  </div>
+                </div>
+
+                {/* Footer Logic: Pilot Info */}
+                {booking.status === "Delivered" ? (
+                   <div className="pt-2 text-center">
+                     <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest">
+                       Flight Completed Successfully
+                     </p>
+                   </div>
+                ) : booking.pilot_uid ? (
+                  <div className="pt-5 border-t border-gray-100 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-[#111] flex items-center justify-center text-white text-sm font-bold shadow-md">
+                        {booking.pilot_details?.name ? booking.pilot_details.name.charAt(0).toUpperCase() : "P"}
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-0.5">Assigned Pilot</p>
+                        <p className="text-sm font-bold text-[#111]">
+                          {booking.pilot_details?.name || "Pilot Assigned"}
+                        </p>
+                      </div>
+                    </div>
+                    {booking.pilot_details?.phone && (
+                      <a href={`tel:${booking.pilot_details.phone}`} className="bg-[#F5F5F5] hover:bg-[#EBEBEB] text-[#111] transition-colors px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2">
+                        📞 Contact
+                      </a>
+                    )}
+                  </div>
                 ) : (
-                  <div className="mt-4 pt-4 border-t border-[#222]">
-                    <p className="text-xs text-[#888] flex items-center gap-2">
-                      <span className="animate-pulse">⏳</span> Searching for nearby pilots...
+                  <div className="pt-4 border-t border-gray-100 flex items-center gap-3">
+                    <div className="w-2.5 h-2.5 bg-[#111] rounded-full animate-ping"></div>
+                    <p className="text-sm font-bold text-gray-500">
+                      Finding a nearby pilot...
                     </p>
                   </div>
                 )}
