@@ -81,7 +81,7 @@ const Safety = () => {
           { y: 30, opacity: 0 },
           { 
             y: 0, opacity: 1, duration: 1.2, ease: "power2.out",
-            scrollTrigger: { trigger: section, start: "top 90%" }
+            scrollTrigger: { trigger: section, start: "top 95%" }
           }
         );
       });
@@ -90,11 +90,10 @@ const Safety = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative min-h-screen bg-[#F8F9FA] text-[#1a1a1a] pb-40 pt-28 md:pt-48 font-sans selection:bg-black selection:text-white">
-      {/* Importing Inter for better premium legibility */}
+    <div ref={containerRef} className="relative min-h-screen bg-[#F8F9FA] text-[#1a1a1a] pb-24 pt-24 md:pb-40 md:pt-48 font-sans selection:bg-black selection:text-white">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
       `}</style>
 
       {/* --- REFINED SUBTLE GRID --- */}
@@ -104,57 +103,58 @@ const Safety = () => {
             linear-gradient(#000 1px, transparent 1px),
             linear-gradient(90deg, #000 1px, transparent 1px)
           `,
-          backgroundSize: '80px 80px'
+          backgroundSize: 'clamp(40px, 8vw, 80px) clamp(40px, 8vw, 80px)'
         }}
       ></div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-12">
 
         {/* --- HEADER --- */}
-        <header className="reveal-section mb-32">
-          <div className="flex flex-col md:flex-row justify-between items-end gap-12 border-b-2 border-gray-200 pb-16">
+        <header className="reveal-section mb-16 md:mb-32">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 border-b-2 border-gray-200 pb-12 md:pb-16">
             <div className="max-w-4xl">
-              <span className="text-xs font-black text-gray-400 uppercase tracking-[0.4em] mb-6 block">
-                Safety & Compliance Report // 2026_V4
+              <span className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-[0.3em] mb-4 block">
+                Safety & Compliance // 2026_V4
               </span>
-              <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] text-black">
-                Absolute <br /> <span className="text-gray-300">Safety Standards.</span>
+              <h1 className="text-4xl sm:text-5xl md:text-8xl font-black tracking-tighter leading-[1] text-black">
+                Absolute <br className="hidden sm:block" /> 
+                <span className="text-gray-300">Safety Standards.</span>
               </h1>
-              <p className="text-xl md:text-2xl text-gray-600 font-medium mt-10 leading-relaxed max-w-3xl">
-                Aircab Black operates with a zero-failure mandate. Our safety framework is architected for professionals who demand total reliability in every flight.
+              <p className="text-base md:text-2xl text-gray-600 font-medium mt-6 md:mt-10 leading-relaxed max-w-3xl">
+                Aircab Black operates with a zero-failure mandate. Our framework is architected for professionals who demand total reliability.
               </p>
             </div>
             <div className="hidden lg:block text-right">
-              <div className="w-20 h-20 bg-black rounded-[1.5rem] flex items-center justify-center text-white text-3xl mb-6 ml-auto shadow-xl">🚁</div>
-              <p className="font-extrabold text-xs uppercase tracking-widest text-gray-400 leading-relaxed">
-                Standard: DGCA_Aviation_Rules <br /> Authority: Aircab_Systems_International
+              <div className="w-16 h-16 md:w-20 md:h-20 bg-black rounded-2xl flex items-center justify-center text-white text-2xl md:text-3xl mb-6 ml-auto shadow-xl">🚁</div>
+              <p className="font-extrabold text-[10px] uppercase tracking-widest text-gray-400 leading-relaxed">
+                Standard: DGCA_Aviation_Rules <br /> Auth: Aircab_Systems
               </p>
             </div>
           </div>
         </header>
 
         {/* --- SAFETY LEVELS --- */}
-        <div className="flex flex-col gap-40">
+        <div className="flex flex-col gap-24 md:gap-40">
           {safetyLevels.map((level) => (
-            <section key={level.id} className="reveal-section grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+            <section key={level.id} className="reveal-section grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16 items-start">
               
-              {/* Level Indicator */}
-              <div className="lg:col-span-1 border-l-4 border-black pl-8 pt-2 h-full">
-                <span className="font-black text-sm tracking-widest text-gray-300 uppercase">Level</span>
-                <div className="text-5xl font-black leading-none mt-1">{level.id}</div>
+              {/* Level Indicator - Stacks on mobile */}
+              <div className="lg:col-span-1 border-l-4 border-black pl-5 md:pl-8 pt-1 h-fit md:h-full">
+                <span className="font-black text-[10px] md:text-sm tracking-widest text-gray-300 uppercase">Level</span>
+                <div className="text-3xl md:text-5xl font-black leading-none mt-1">{level.id}</div>
               </div>
 
               {/* Grid of Checks */}
-              <div className="lg:col-span-8">
-                <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-16 text-black">{level.title}</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-16">
+              <div className="lg:col-span-8 order-2 lg:order-2">
+                <h2 className="text-2xl md:text-5xl font-black tracking-tight mb-8 md:mb-16 text-black">{level.title}</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-10 md:gap-x-16 md:gap-y-16">
                   {level.checks.map((check) => (
                     <div key={check.id} className="group">
-                      <div className="flex items-center gap-4 mb-5">
-                        <span className="text-xs font-black text-white bg-black px-3 py-1 rounded-lg shadow-sm">{check.id}</span>
-                        <h4 className="text-lg font-black uppercase tracking-widest text-black">{check.title}</h4>
+                      <div className="flex items-center gap-3 mb-3 md:mb-5">
+                        <span className="text-[10px] font-black text-white bg-black px-2 py-0.5 rounded-md shadow-sm">{check.id}</span>
+                        <h4 className="text-sm md:text-lg font-black uppercase tracking-widest text-black">{check.title}</h4>
                       </div>
-                      <p className="text-lg text-gray-600 font-medium leading-relaxed group-hover:text-black transition-colors duration-300">
+                      <p className="text-sm md:text-lg text-gray-600 font-medium leading-relaxed group-hover:text-black transition-colors duration-300">
                         {check.desc}
                       </p>
                     </div>
@@ -162,22 +162,22 @@ const Safety = () => {
                 </div>
               </div>
 
-              {/* System Readout Spec Panel */}
-              <div className="lg:col-span-3 bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.04)] self-start">
-                <div className="flex items-center gap-3 mb-8">
-                  <div className="w-2.5 h-2.5 rounded-full bg-black animate-pulse"></div>
-                  <h5 className="text-xs font-black text-black uppercase tracking-[0.2em]">Real-Time Sync</h5>
+              {/* System Readout Spec Panel - Smaller and cleaner for mobile */}
+              <div className="lg:col-span-3 order-1 lg:order-3 bg-white rounded-3xl p-6 md:p-10 border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.03)] self-start w-full">
+                <div className="flex items-center gap-3 mb-6 md:mb-8">
+                  <div className="w-2 h-2 rounded-full bg-black animate-pulse"></div>
+                  <h5 className="text-[10px] md:text-xs font-black text-black uppercase tracking-[0.2em]">Real-Time Sync</h5>
                 </div>
-                <ul className="space-y-6">
+                <ul className="space-y-4 md:space-y-6">
                   {level.readout.map((line, i) => (
-                    <li key={i} className="flex justify-between border-b border-gray-50 pb-3">
-                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{line.split(":")[0]}</span>
-                      <span className="text-[10px] font-black text-black uppercase tracking-wider">{line.split(":")[1]}</span>
+                    <li key={i} className="flex justify-between border-b border-gray-50 pb-2 md:pb-3">
+                      <span className="text-[8px] md:text-[10px] font-bold text-gray-400 uppercase tracking-wider">{line.split(":")[0]}</span>
+                      <span className="text-[8px] md:text-[10px] font-black text-black uppercase tracking-wider">{line.split(":")[1]}</span>
                     </li>
                   ))}
                 </ul>
-                <div className="mt-10 pt-6 border-t border-gray-100">
-                  <p className="text-[10px] font-extrabold text-gray-300 uppercase tracking-widest italic">Auth_Status: Operational</p>
+                <div className="mt-6 md:mt-10 pt-4 md:pt-6 border-t border-gray-100">
+                  <p className="text-[9px] md:text-[10px] font-extrabold text-gray-300 uppercase tracking-widest italic">Auth_Status: Operational</p>
                 </div>
               </div>
 
@@ -186,19 +186,19 @@ const Safety = () => {
         </div>
 
         {/* --- FOOTER BADGE --- */}
-        <footer className="reveal-section mt-48 pt-20 border-t-2 border-gray-200 flex flex-col md:flex-row justify-between items-center gap-16">
+        <footer className="reveal-section mt-32 md:mt-48 pt-12 md:pt-20 border-t-2 border-gray-200 flex flex-col md:flex-row justify-between items-center gap-10 md:gap-16">
           <div className="text-center md:text-left">
-            <p className="text-3xl font-black tracking-tighter text-black mb-2">Uncompromising Safety.</p>
-            <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.3em]">Built for those who value every second.</p>
+            <p className="text-2xl md:text-3xl font-black tracking-tighter text-black mb-2">Uncompromising Safety.</p>
+            <p className="text-[10px] md:text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">Built for those who value every second.</p>
           </div>
           
-          {/* Executive Certification Badge */}
-          <div className="group relative scale-110 md:scale-125">
+          {/* Executive Certification Badge - Responsive scaling */}
+          <div className="group relative scale-90 sm:scale-100 md:scale-125">
             <div className="absolute inset-0 bg-black blur-2xl opacity-5 group-hover:opacity-10 transition-opacity"></div>
-            <div className="relative border-[4px] border-black p-8 md:p-10 text-center bg-white shadow-2xl rounded-2xl -rotate-1 group-hover:rotate-0 transition-transform duration-500">
-              <p className="text-[11px] font-black uppercase tracking-[0.4em] mb-2 text-gray-400">Civil Aviation Authority</p>
-              <h3 className="text-3xl font-black text-black leading-none">DGCA COMPLIANT</h3>
-              <p className="text-[10px] font-bold text-gray-500 mt-4 uppercase tracking-widest">Official Certification #2026-BLACK-X77</p>
+            <div className="relative border-[3px] md:border-[4px] border-black p-6 md:p-10 text-center bg-white shadow-2xl rounded-2xl -rotate-1 group-hover:rotate-0 transition-transform duration-500">
+              <p className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.3em] mb-2 text-gray-400">Civil Aviation Authority</p>
+              <h3 className="text-xl md:text-3xl font-black text-black leading-none">DGCA COMPLIANT</h3>
+              <p className="text-[8px] md:text-[10px] font-bold text-gray-500 mt-3 md:mt-4 uppercase tracking-widest">Official Certification #2026-BLACK-X77</p>
             </div>
           </div>
         </footer>
