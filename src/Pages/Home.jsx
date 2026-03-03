@@ -135,8 +135,9 @@ const Home = () => {
             <div className="flex items-center gap-4 text-xs font-bold tracking-widest uppercase"><span className="w-8 h-px bg-white"></span>Zero-Emission Flight</div>
           </div>
           <div className="relative h-[300px] md:h-[500px] order-1 lg:order-2">
-            <div className="absolute inset-0 rounded-2xl overflow-hidden border border-white/10 grayscale opacity-40"><img src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?q=80&w=1200" className="w-full h-full object-cover" alt="City" /></div>
-          </div>
+<div className="w-full h-full rounded-2xl opacity-60 hover:opacity-100 hover:brightness-110 transition-all duration-700 overflow-hidden">
+  <img src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?q=80&w=1200" className="w-full h-full object-cover" alt="City" />
+</div>          </div>
         </div>
       </section>
 
