@@ -12,7 +12,7 @@ const slidesData = [
     title: "Urban Air Mobility.", 
     sub: "01 // THE FUTURE OF TRANSIT", 
     desc: "Bypass the gridlock. Summon autonomous eVTOLs to your precise coordinates and cross the city in minutes.", 
-    img: "https://thumbs.dreamstime.com/b/passenger-aavs-future-urban-air-mobility-futuristic-cityscape-ai-generative-created-technology-290207820.jpg", 
+    img: "https://www.rhsmith.umd.edu/sites/default/files/research/featured/2024/09/urban-air-mobility.jpg", 
     cta: "Book a Flight",
     path: "/servicebookings"
   },
