@@ -199,7 +199,8 @@ const PilotDashboard = () => {
                 </div>
               ) : (
                 <MapContainer center={currentLocation} zoom={15} style={{ height: "100%", width: "100%" }} zoomControl={false}>
-                  <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+                  {/* 🟢 Updated TileLayer to CartoDB Positron (Light Color) */}
+                  <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
                   <MapUpdater center={currentLocation} />
                   <Marker position={currentLocation} icon={pilotIcon} />
                 </MapContainer>

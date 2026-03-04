@@ -14,6 +14,9 @@ import ServiceBooking from './Pages/Service_booking';
 import PilotDashboard from './Pages/PilotDashboard';
 import D from './Pages/D';
 import MyBookings from './Pages/MyBookings';
+import PaymentPage from './Pages/Payment';
+import PilotRegistration from './Pages/PilotRegistration';
+import About from './Pages/About';
 //Test
 import Login from './Pages/Login';
 
@@ -58,6 +61,9 @@ const AppContent = () => {
         <Route path="/pilot" element={<PilotDashboard/>}/>
         <Route path="/D" element={<D/>}/>
         <Route path="/mybookings" element={<MyBookings/>}/>
+         <Route path="/Payment" element={<PaymentPage/>}/>
+         <Route path="/PilotRegistration" element={<PilotRegistration/>}/>
+         <Route path="/About" element={<About/>}/>
       </Routes>
     </>
   );

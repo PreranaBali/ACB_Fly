@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { MapContainer, TileLayer, Marker, Popup, Circle, useMap, Polyline } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Circle, useMap, Polyline, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -68,6 +68,9 @@ const ServiceBooking = () => {
   const [liveAircabLoc, setLiveAircabLoc] = useState(null); 
   const trackingInterval = useRef(null);
 
+  // 🟢 State for Top Panel
+  const [showTopPanel, setShowTopPanel] = useState(false);
+
   const priceChart = {
     "Crop Spraying": { rate: 600, unit: "Acres" },
     "Crop Monitoring": { rate: 400, unit: "Acres" },
@@ -112,20 +115,36 @@ const ServiceBooking = () => {
     setStatus({ type: "info", text: "Locating..." });
     navigator.geolocation.getCurrentPosition(async (pos) => {
       const { latitude: lat, longitude: lon } = pos.coords;
-      setUserLoc({ lat, lon });
-      fetchLiveFleet(); 
-
-      try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-        const data = await res.json();
-        const shortAddress = data.display_name.split(",").slice(0, 3).join(", ");
-        setBookingData(prev => ({ ...prev, address: shortAddress || `${lat.toFixed(4)}, ${lon.toFixed(4)}` }));
-        setStatus({ type: "", text: "" });
-      } catch (err) {
-        setBookingData(prev => ({ ...prev, address: `${lat.toFixed(4)}, ${lon.toFixed(4)}` }));
-        setStatus({ type: "", text: "" });
-      }
+      handleLocationSelect(lat, lon);
     });
+  };
+
+  // 🟢 Shared function to handle location setting
+  const handleLocationSelect = async (lat, lon) => {
+    setUserLoc({ lat, lon });
+    setShowTopPanel(true); // 🟢 Slide down the panel
+    fetchLiveFleet(); 
+
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+      const data = await res.json();
+      const shortAddress = data.display_name.split(",").slice(0, 3).join(", ");
+      setBookingData(prev => ({ ...prev, address: shortAddress || `${lat.toFixed(4)}, ${lon.toFixed(4)}` }));
+      setStatus({ type: "", text: "" });
+    } catch (err) {
+      setBookingData(prev => ({ ...prev, address: `${lat.toFixed(4)}, ${lon.toFixed(4)}` }));
+      setStatus({ type: "", text: "" });
+    }
+  };
+
+  // 🟢 Component to capture Map Clicks
+  const MapEventsHandler = () => {
+    useMapEvents({
+      click(e) {
+        handleLocationSelect(e.latlng.lat, e.latlng.lng);
+      },
+    });
+    return null;
   };
 
   const handleDispatch = async (e) => {
@@ -182,11 +201,11 @@ const ServiceBooking = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 font-sans">
-        <h1 className="text-4xl font-bold mb-2 tracking-tight">Aircab</h1>
-        <p className="text-gray-500 mb-8 text-center">Your premium aerial mobility service.</p>
-        <button onClick={() => navigate("/login")} className="w-full max-w-sm bg-black text-white py-4 rounded-xl font-semibold text-lg hover:bg-gray-800 transition active:scale-95">
-          Log in to continue
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 font-sans text-center">
+        <h1 className="text-4xl font-black mb-2 tracking-tighter uppercase">Aircab Black</h1>
+        <p className="text-gray-400 mb-8 max-w-xs font-medium">Premium terminal access is restricted to verified members.</p>
+        <button onClick={() => navigate("/login")} className="w-full max-w-sm bg-black text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-sm hover:bg-gray-800 transition shadow-xl active:scale-95">
+          Initialize Login
         </button>
       </div>
     );
@@ -194,18 +213,36 @@ const ServiceBooking = () => {
 
   return (
     <div className="relative h-[100dvh] w-full bg-gray-100 font-sans overflow-hidden">
-      {/* Required for the marker pulse animation */}
       <style>{`
         @keyframes ping {
           75%, 100% { transform: scale(2.5); opacity: 0; }
         }
       `}</style>
 
+      {/* 🟢 TOP PANEL: Sliding Logic Fixed with z-[9999] and fixed position */}
+      <div 
+        className={`fixed top-0 left-0 right-0 z-[9999] bg-white border-b border-gray-100 shadow-2xl p-6 transition-transform duration-500 ease-in-out transform ${showTopPanel ? 'translate-y-0' : '-translate-y-full'}`}
+      >
+        <div className="max-w-md mx-auto flex justify-between items-center">
+          <div>
+            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-gray-400 mb-1 block">Deployment Zone</span>
+            <p className="text-sm font-extrabold text-black truncate max-w-[200px] md:max-w-xs">{bookingData.address || "Selecting Location..."}</p>
+          </div>
+          <button 
+            onClick={() => setShowTopPanel(false)}
+            className="bg-black text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-800 active:scale-95 transition-all shadow-lg"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+
       {/* 🗺️ LAYER 1: Full-Bleed Map */}
       <div className="absolute inset-0 z-0">
         <MapContainer center={defaultCenter} zoom={5} className="h-full w-full" zoomControl={false}>
           <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
           <MapUpdater center={currentCenter} zoomLevel={currentZoom} />
+          <MapEventsHandler />
 
           {userLoc && (
             <>
@@ -227,130 +264,98 @@ const ServiceBooking = () => {
         </MapContainer>
       </div>
 
-      {/* 🔍 LAYER 2: Floating Top Search Bar */}
-      <div className="absolute top-24 left-4 right-4 z-10 max-w-md mx-auto">
+      {/* 🔍 LAYER 2: Floating Search Bar */}
+      <div className="absolute top-24 left-4 right-4 z-[500] max-w-md mx-auto">
         <div 
           onClick={establishLandingZone}
-          className="bg-white rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.08)] p-4 flex items-center gap-3 cursor-pointer border border-gray-100 transition-all hover:shadow-[0_4px_25px_rgba(0,0,0,0.12)] active:scale-[0.98]"
+          className="bg-white rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.08)] p-4 flex items-center gap-3 cursor-pointer border border-gray-100 transition-all hover:shadow-[0_15px_40px_rgba(0,0,0,0.12)] active:scale-[0.98]"
         >
-          {/* Dynamic Status Dot */}
           <div className={`w-3 h-3 rounded-full shadow-sm flex-shrink-0 transition-colors duration-300 ${isLocating ? 'bg-blue-500 animate-pulse' : 'bg-black'}`}></div>
-          
-          <p className={`font-medium truncate flex-1 ${bookingData.address && !isLocating ? 'text-black' : 'text-gray-400'}`}>
-            {isLocating ? "Acquiring GPS signal..." : (bookingData.address || "Where to send the Aircab?")}
+          <p className={`font-semibold truncate flex-1 text-sm ${bookingData.address && !isLocating ? 'text-black' : 'text-gray-400'}`}>
+            {isLocating ? "Syncing Satellites..." : (bookingData.address || "Where is the LZ?")}
           </p>
-          
-          <div className="bg-gray-50 border border-gray-100 p-2 rounded-full flex-shrink-0 hover:bg-gray-100 transition-colors">
-            <span className="text-sm text-black font-medium px-1">📍 Locate</span>
+          <div className="bg-gray-50 border border-gray-100 p-2 rounded-full flex-shrink-0 px-3">
+            <span className="text-[10px] text-black font-black uppercase tracking-widest">📍 Locate</span>
           </div>
         </div>
       </div>
 
-      {/* 📱 LAYER 3: Fixed Bottom Sheet */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 bg-white rounded-t-3xl shadow-[0_-15px_40px_rgba(0,0,0,0.08)] pb-8 pt-3 px-6 max-w-md mx-auto transform transition-transform duration-500 ease-out">
-        {/* Pull Indicator */}
-        <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-6"></div>
+      {/* 📱 LAYER 3: Bottom Sheet */}
+      <div className="absolute bottom-0 left-0 right-0 z-[500] bg-white rounded-t-[2.5rem] shadow-[0_-20px_60px_rgba(0,0,0,0.1)] pb-10 pt-4 px-6 max-w-md mx-auto">
+        <div className="w-12 h-1.5 bg-gray-100 rounded-full mx-auto mb-8"></div>
 
         {status.text && !isLocating && (
-          <div className={`mb-4 p-3 rounded-xl text-sm font-medium transition-all ${status.type === 'error' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-green-50 text-green-600 border border-green-100'}`}>
+          <div className={`mb-6 p-4 rounded-2xl text-xs font-black uppercase tracking-widest text-center border ${status.type === 'error' ? 'bg-red-50 text-red-600 border-red-100' : 'bg-green-50 text-green-600 border-green-100'}`}>
             {status.text}
           </div>
         )}
 
         {activeFlight ? (
           <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-6">
+            <div className="flex items-center justify-between border-b border-gray-50 pb-6">
               <div>
-                <h3 className="text-2xl font-extrabold text-black tracking-tight">{activeFlight.id}</h3>
-                <p className="text-gray-500 font-medium mt-1">Pilot is en route to LZ</p>
+                <h3 className="text-2xl font-black text-black tracking-tighter uppercase">{activeFlight.id}</h3>
+                <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mt-1">Intercept in Progress</p>
               </div>
-              <div className="bg-gray-50 rounded-2xl p-4 text-center border border-gray-100 shadow-sm">
-                <span className="block text-3xl font-extrabold text-black">{activeFlight.eta}</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">MIN</span>
+              <div className="bg-black rounded-2xl p-5 text-center shadow-xl">
+                <span className="block text-3xl font-black text-white leading-none">{activeFlight.eta}</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-gray-500 mt-1 block">MIN</span>
               </div>
             </div>
-            <button onClick={() => window.location.reload()} className="w-full py-4 bg-gray-100 text-black font-bold rounded-xl hover:bg-gray-200 transition-colors active:scale-[0.98]">
-              Cancel Request
+            <button onClick={() => window.location.reload()} className="w-full py-5 bg-gray-100 text-gray-400 font-black uppercase text-[10px] tracking-[0.2em] rounded-2xl hover:bg-red-50 hover:text-red-500 transition-colors">
+              Abort Mission
             </button>
           </div>
         ) : (
           <form onSubmit={handleDispatch} className="space-y-4">
-            {/* Categorized Service Selection */}
-            <div className="relative bg-gray-50 rounded-xl border border-gray-200 focus-within:border-black focus-within:ring-1 focus-within:ring-black transition-all">
+            <div className="relative bg-gray-50 rounded-2xl border border-gray-100 focus-within:border-black transition-all">
               <select 
                 value={bookingData.serviceType} 
                 onChange={(e) => setBookingData({...bookingData, serviceType: e.target.value, quantity: 0})}
-                className="w-full bg-transparent text-black font-semibold p-4 pr-10 outline-none appearance-none cursor-pointer"
+                className="w-full bg-transparent text-black font-extrabold p-4 pr-10 outline-none appearance-none cursor-pointer uppercase text-xs tracking-widest"
               >
                 <optgroup label="🌾 Agriculture">
                   <option value="Crop Spraying">Crop Spraying</option>
                   <option value="Crop Monitoring">Crop Monitoring</option>
                   <option value="Field Mapping">Field Mapping</option>
-                  <option value="Seed Spreading">Seed Spreading</option>
                 </optgroup>
                 <optgroup label="🚨 Rapid Response">
                   <option value="Emergency Delivery">Emergency Delivery</option>
                   <option value="Medicine Transport">Medicine Transport</option>
-                  <option value="Disaster Relief Drop">Disaster Relief Drop</option>
                 </optgroup>
-                <optgroup label="🎥 Aerial Media">
-                  <option value="Wedding Shoot">Wedding Shoot</option>
-                  <option value="Property Shoot">Property Shoot</option>
+                <optgroup label="🎥 Media">
+                   <option value="Wedding Shoot">Wedding Shoot</option>
                 </optgroup>
               </select>
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-black text-[10px]">
-                ▼
-              </div>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[8px]">▼</div>
             </div>
 
-            {/* Metrics Grid */}
             <div className="grid grid-cols-3 gap-3">
-              <div className="bg-gray-50 rounded-xl border border-gray-200 p-2 focus-within:border-black focus-within:ring-1 focus-within:ring-black transition-all">
-                <label className="text-[10px] uppercase font-bold text-gray-400 px-2 block">{priceChart[bookingData.serviceType].unit}</label>
-                <input 
-                  type="number" 
-                  placeholder="0"
-                  value={bookingData.quantity || ""} 
-                  onChange={(e) => setBookingData({...bookingData, quantity: parseFloat(e.target.value) || 0})}
-                  className="w-full bg-transparent text-black placeholder-gray-400 font-semibold p-2 outline-none"
-                />
+              <div className="bg-gray-50 rounded-2xl border border-gray-100 p-3">
+                <label className="text-[8px] uppercase font-black text-gray-400 block mb-1">{priceChart[bookingData.serviceType].unit}</label>
+                <input type="number" placeholder="0" value={bookingData.quantity || ""} onChange={(e) => setBookingData({...bookingData, quantity: parseFloat(e.target.value) || 0})} className="w-full bg-transparent text-black font-black outline-none text-sm" />
               </div>
-              
-              <div className="bg-gray-50 rounded-xl border border-gray-200 p-2 focus-within:border-black focus-within:ring-1 focus-within:ring-black transition-all">
-                <label className="text-[10px] uppercase font-bold text-gray-400 px-2 block">Date</label>
-                <input 
-                  type="date" 
-                  min={minDate}
-                  value={bookingData.date} 
-                  onChange={(e) => setBookingData({...bookingData, date: e.target.value})}
-                  className="w-full bg-transparent text-black font-semibold p-2 outline-none text-sm"
-                />
+              <div className="bg-gray-50 rounded-2xl border border-gray-100 p-3">
+                <label className="text-[8px] uppercase font-black text-gray-400 block mb-1">Date</label>
+                <input type="date" min={minDate} value={bookingData.date} onChange={(e) => setBookingData({...bookingData, date: e.target.value})} className="w-full bg-transparent text-black font-black outline-none text-[10px]" />
               </div>
-              
-              <div className="bg-gray-50 rounded-xl border border-gray-200 p-2 focus-within:border-black focus-within:ring-1 focus-within:ring-black transition-all">
-                <label className="text-[10px] uppercase font-bold text-gray-400 px-2 block">Time</label>
-                <input 
-                  type="time" 
-                  value={bookingData.time} 
-                  onChange={(e) => setBookingData({...bookingData, time: e.target.value})}
-                  className="w-full bg-transparent text-black font-semibold p-2 outline-none text-sm"
-                />
+              <div className="bg-gray-50 rounded-2xl border border-gray-100 p-3">
+                <label className="text-[8px] uppercase font-black text-gray-400 block mb-1">Time</label>
+                <input type="time" value={bookingData.time} onChange={(e) => setBookingData({...bookingData, time: e.target.value})} className="w-full bg-transparent text-black font-black outline-none text-xs" />
               </div>
             </div>
 
-            {/* Payment & Submit Row */}
-            <div className="flex items-center gap-4 pt-5 mt-2">
-              <div className="flex flex-col flex-1 pl-1">
-                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Est. Total</span>
-                <span className="text-2xl font-extrabold text-black tracking-tight">₹{totalPrice.toLocaleString()}</span>
+            <div className="flex items-center gap-4 pt-4">
+              <div className="flex flex-col flex-1">
+                <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Est. Premium</span>
+                <span className="text-2xl font-black text-black tracking-tighter">₹{totalPrice.toLocaleString()}</span>
               </div>
-              
               <button 
                 type="submit" 
                 disabled={processing || !userLoc} 
-                className="flex-[2] py-4 bg-black text-white font-bold rounded-xl text-lg shadow-[0_4px_14px_rgba(0,0,0,0.25)] hover:bg-gray-800 hover:shadow-[0_6px_20px_rgba(0,0,0,0.23)] disabled:bg-gray-200 disabled:text-gray-400 disabled:shadow-none transition-all active:scale-[0.98]"
+                className="flex-[1.5] py-5 bg-black text-white font-black uppercase tracking-[0.2em] text-xs rounded-2xl shadow-2xl active:scale-95 disabled:bg-gray-100 disabled:text-gray-300 transition-all"
               >
-                {processing ? "Connecting..." : `Request`}
+                {processing ? "Linking..." : "Dispatch"}
               </button>
             </div>
           </form>
