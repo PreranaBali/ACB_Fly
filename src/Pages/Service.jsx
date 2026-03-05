@@ -105,7 +105,6 @@ const Service = () => {
   const SlideCard = ({ slide }) => (
     <div className="w-[300px] md:w-[400px] h-[220px] md:h-[280px] relative rounded-3xl overflow-hidden border border-gray-100 group flex-shrink-0 bg-white shadow-sm">
       <img src={slide.img} alt={slide.title} className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-105" />
-      {/* 🟢 Removed white gradient overlay here */}
       <div className="absolute bottom-0 left-0 w-full p-6">
         <span className="font-extrabold text-black tracking-tight text-lg uppercase">{slide.title}</span>
       </div>
@@ -113,11 +112,12 @@ const Service = () => {
   );
 
   return (
-    <div ref={containerRef} className="w-full bg-[#FFFFFF] min-h-screen text-[#111] pt-32 font-sans selection:bg-black selection:text-white">
+    <div ref={containerRef} className="w-full bg-[#FFFFFF] min-h-screen text-[#111] pt-32 font-sans selection:bg-black selection:text-white overflow-x-hidden">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
       `}</style>
       
+      {/* SECTION 1: HERO */}
       <section className="min-h-[60vh] flex flex-col justify-center items-center text-center px-6 relative overflow-hidden mb-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.02)_0%,transparent_70%)] pointer-events-none"></div>
         <h1 className="font-black text-[clamp(2.5rem,7vw,6rem)] leading-[1] mb-8 tracking-tighter uppercase reveal-text text-black">
@@ -128,6 +128,7 @@ const Service = () => {
         </p>
       </section>
 
+      {/* SECTION 2: INFINITE SLIDER */}
       <section className="py-16 bg-[#FAFAFA] overflow-hidden border-y border-gray-100 relative">
         <div ref={sliderRef} className="flex gap-6 w-max will-change-transform">
           {sliderImages.map((slide, i) => <SlideCard key={`a-${i}`} slide={slide} />)}
@@ -135,6 +136,46 @@ const Service = () => {
         </div>
       </section>
 
+      {/* 👨‍💼 SECTION 3: FOUNDER SECTION (Moved to top per request) */}
+      <section className="py-32 px-[6%] lg:px-[10%] bg-white border-b border-gray-100">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
+          <div className="lg:col-span-5 reveal-text">
+            <div className="relative group rounded-[2.5rem] overflow-hidden shadow-2xl bg-gray-100 aspect-[4/5] border border-gray-100">
+              <img 
+                src="/images/f.png" 
+                alt="Mr. Muthyal Ashwin Kumar" 
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
+              />
+              <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black/80 to-transparent">
+                <span className="text-white text-[10px] font-black uppercase tracking-[0.4em] block mb-1">Founder & CEO</span>
+                <p className="text-white font-bold text-2xl tracking-tighter">M. Ashwin Kumar</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="lg:col-span-7">
+            <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mb-6 block reveal-text">Our Visionary</span>
+            <h2 className="font-black text-4xl md:text-6xl tracking-tighter uppercase mb-8 leading-tight text-black reveal-text">
+              Mr. Muthyal <br/> <span className="text-gray-300">Ashwin Kumar</span>
+            </h2>
+            <p className="text-gray-500 font-medium text-lg mb-10 leading-relaxed reveal-text">
+              With over a decade of leadership in autonomous systems, Mr. Muthyal Ashwin Kumar founded ACBfly to revolutionize how goods and people move across the sky. His vision for a zero-failure, electric aerial network is the heartbeat of our technical innovation.
+            </p>
+            <div className="flex gap-12 border-t border-gray-100 pt-10 reveal-text">
+              <div>
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2">Philosophy</span>
+                <p className="text-black font-bold text-sm">Safety-First Autonomous Design</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2">Target</span>
+                <p className="text-black font-bold text-sm">Net-Zero Urban Logistics</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 4: CAPABILITY GRID */}
       <section className="py-32 px-[6%] lg:px-[10%] bg-white">
         <div className="mb-20 text-left border-l-4 border-black pl-8">
           <p className="text-gray-400 font-bold tracking-[0.3em] text-xs uppercase mb-4 reveal-text">Core Operations</p>
@@ -165,10 +206,10 @@ const Service = () => {
         </div>
       </section>
 
+      {/* SECTION 5: DETAILED SERVICES */}
       <section className="pb-32 px-[6%] lg:px-[10%] bg-[#FAFAFA]">
         {detailedServices.map((service, index) => (
           <div key={service.id} className={`service-row flex flex-col lg:flex-row gap-16 lg:gap-24 items-center mb-40 ${index % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}>
-            
             <div className="text-col flex-1 w-full">
               <span className="text-7xl font-black text-gray-200 block mb-4 tracking-tighter">{service.id}</span>
               <h2 className="font-black text-3xl md:text-5xl uppercase tracking-tighter mb-8 leading-none text-black">{service.title}</h2>
@@ -208,15 +249,14 @@ const Service = () => {
 
             <div className="img-col flex-1 h-[400px] md:h-[600px] w-full relative rounded-[2rem] overflow-hidden border border-gray-200 group bg-white shadow-xl">
               <img src={service.img} alt={service.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105" />
-              {/* 🟢 Removed white gradient overlay here */}
             </div>
-
           </div>
         ))}
       </section>
 
+      {/* SECTION 6: CTA */}
       <section className="min-h-[60vh] flex flex-col justify-center items-center text-center bg-white border-t border-gray-100 px-6">
-        <h2 className="font-black text-4xl md:text-7xl tracking-tighter uppercase mb-12 reveal-text text-black">Ready for <br/> <span className="text-gray-200 text-outline">Takeoff</span></h2>
+        <h2 className="font-black text-4xl md:text-7xl tracking-tighter uppercase mb-12 reveal-text text-black">Ready for <br/> <span className="text-gray-200">Takeoff</span></h2>
         <button className="px-14 py-6 bg-black text-white font-black uppercase text-sm tracking-[0.2em] rounded-full hover:bg-gray-800 transition-all duration-500 shadow-xl active:scale-95 reveal-text">
           Initiate Request
         </button>

@@ -10,7 +10,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Safety", path: "/safety" },
-    { name: "Service", path: "/service" },
+    { name: "About us and our Service", path: "/service" },
     { name: "Terms", path: "/terms" },
     { name: "My bookings", path: "/mybookings" },
     { name: "Book a service", path: "/servicebookings" },
