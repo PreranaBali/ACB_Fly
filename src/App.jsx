@@ -17,6 +17,7 @@ import MyBookings from './Pages/MyBookings';
 import PaymentPage from './Pages/Payment';
 import PilotRegistration from './Pages/PilotRegistration';
 import About from './Pages/About';
+import Track from './Pages/Track';
 //Test
 import Login from './Pages/Login';
 
@@ -64,6 +65,7 @@ const AppContent = () => {
          <Route path="/Payment" element={<PaymentPage/>}/>
          <Route path="/PilotRegistration" element={<PilotRegistration/>}/>
          <Route path="/About" element={<About/>}/>
+         <Route path="/Track" element={<Track/>}/>
       </Routes>
     </>
   );
