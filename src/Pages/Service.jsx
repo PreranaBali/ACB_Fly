@@ -144,7 +144,7 @@ const Service = () => {
               <img 
                 src="/images/f.png" 
                 alt="Mr. Muthyal Ashwin Kumar" 
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
+                className="w-full h-full object-cover  group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
               />
               <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black/80 to-transparent">
                 <span className="text-white text-[10px] font-black uppercase tracking-[0.4em] block mb-1">Founder & CEO</span>
