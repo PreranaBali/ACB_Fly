@@ -92,8 +92,10 @@ const Service = () => {
       });
 
       gsap.utils.toArray('.service-row').forEach((row) => {
-        gsap.fromTo(row.querySelector('.text-col'), { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2, ease: "power2.out", scrollTrigger: { trigger: row, start: "top 80%" } });
-        gsap.fromTo(row.querySelector('.img-col'), { scale: 0.95, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.4, ease: "expo.out", scrollTrigger: { trigger: row, start: "top 80%" } });
+        const textCol = row.querySelector('.text-col');
+        const imgCol = row.querySelector('.img-col');
+        if(textCol) gsap.fromTo(textCol, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2, ease: "power2.out", scrollTrigger: { trigger: row, start: "top 80%" } });
+        if(imgCol) gsap.fromTo(imgCol, { scale: 0.95, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.4, ease: "expo.out", scrollTrigger: { trigger: row, start: "top 80%" } });
       });
 
       return () => gsap.ticker.remove(animate);
@@ -103,72 +105,72 @@ const Service = () => {
   }, []);
 
   const SlideCard = ({ slide }) => (
-    <div className="w-[300px] md:w-[400px] h-[220px] md:h-[280px] relative rounded-3xl overflow-hidden border border-gray-100 group flex-shrink-0 bg-white shadow-sm">
+    <div className="w-[260px] md:w-[400px] h-[180px] md:h-[280px] relative rounded-3xl overflow-hidden border border-gray-100 group flex-shrink-0 bg-white shadow-sm">
       <img src={slide.img} alt={slide.title} className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-105" />
-      <div className="absolute bottom-0 left-0 w-full p-6">
-        <span className="font-extrabold text-black tracking-tight text-lg uppercase">{slide.title}</span>
+      <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-white via-white/40 to-transparent">
+        <span className="font-extrabold text-black tracking-tight text-sm md:text-lg uppercase">{slide.title}</span>
       </div>
     </div>
   );
 
   return (
-    <div ref={containerRef} className="w-full bg-[#FFFFFF] min-h-screen text-[#111] pt-32 font-sans selection:bg-black selection:text-white overflow-x-hidden">
+    <div ref={containerRef} className="w-full bg-[#FFFFFF] min-h-screen text-[#111] pt-24 md:pt-32 font-sans selection:bg-black selection:text-white overflow-x-hidden">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
       `}</style>
       
       {/* SECTION 1: HERO */}
-      <section className="min-h-[60vh] flex flex-col justify-center items-center text-center px-6 relative overflow-hidden mb-10">
+      <section className="min-h-[50vh] md:min-h-[60vh] flex flex-col justify-center items-center text-center px-6 relative overflow-hidden mb-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.02)_0%,transparent_70%)] pointer-events-none"></div>
-        <h1 className="font-black text-[clamp(2.5rem,7vw,6rem)] leading-[1] mb-8 tracking-tighter uppercase reveal-text text-black">
+        <h1 className="font-black text-[clamp(2rem,8vw,6rem)] leading-[1.1] mb-6 md:mb-8 tracking-tighter uppercase reveal-text text-black">
           Engineering the <br/> <span className="text-gray-300">New Standard</span>
         </h1>
-        <p className="text-lg md:text-xl text-gray-500 max-w-2xl leading-relaxed font-medium reveal-text">
-          Aircab Black applies aerospace-grade autonomous technology to solve the most critical challenges in logistics and urban mobility.
+        <p className="text-base md:text-xl text-gray-500 max-w-2xl leading-relaxed font-medium reveal-text">
+          ACBfly applies aerospace-grade autonomous technology to solve the most critical challenges in logistics and urban mobility.
         </p>
       </section>
 
       {/* SECTION 2: INFINITE SLIDER */}
-      <section className="py-16 bg-[#FAFAFA] overflow-hidden border-y border-gray-100 relative">
-        <div ref={sliderRef} className="flex gap-6 w-max will-change-transform">
+      <section className="py-10 md:py-16 bg-[#FAFAFA] overflow-hidden border-y border-gray-100 relative">
+        <div ref={sliderRef} className="flex gap-4 md:gap-6 w-max will-change-transform">
           {sliderImages.map((slide, i) => <SlideCard key={`a-${i}`} slide={slide} />)}
           {sliderImages.map((slide, i) => <SlideCard key={`b-${i}`} slide={slide} />)}
         </div>
       </section>
 
-      {/* 👨‍💼 SECTION 3: FOUNDER SECTION (Moved to top per request) */}
-      <section className="py-32 px-[6%] lg:px-[10%] bg-white border-b border-gray-100">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
+      {/* 👨‍💼 SECTION 3: FOUNDER SECTION */}
+      <section className="py-20 md:py-32 px-[6%] lg:px-[10%] bg-white border-b border-gray-100">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-16 lg:gap-24 items-center">
           <div className="lg:col-span-5 reveal-text">
-            <div className="relative group rounded-[2.5rem] overflow-hidden shadow-2xl bg-gray-100 aspect-[4/5] border border-gray-100">
+            <div className="relative group rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl bg-gray-100 aspect-[4/5] border border-gray-100">
               <img 
                 src="/images/f.png" 
                 alt="Mr. Muthyal Ashwin Kumar" 
                 className="w-full h-full object-cover  group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
               />
-              <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black/80 to-transparent">
-                <span className="text-white text-[10px] font-black uppercase tracking-[0.4em] block mb-1">Founder & CEO</span>
-                <p className="text-white font-bold text-2xl tracking-tighter">M. Ashwin Kumar</p>
+              <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 bg-gradient-to-t from-black/80 to-transparent text-left">
+                <span className="text-white text-[8px] md:text-[10px] font-black uppercase tracking-[0.4em] block mb-1">Founder & CEO</span>
+                <p className="text-white font-bold text-lg md:text-2xl tracking-tighter">M. Ashwin Kumar</p>
               </div>
             </div>
           </div>
           
-          <div className="lg:col-span-7">
-            <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mb-6 block reveal-text">Our Visionary</span>
-            <h2 className="font-black text-4xl md:text-6xl tracking-tighter uppercase mb-8 leading-tight text-black reveal-text">
-              Mr. Muthyal <br/> <span className="text-gray-300">Ashwin Kumar</span>
+          <div className="lg:col-span-7 text-left">
+            <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mb-4 md:mb-6 block reveal-text">Our Visionary</span>
+            <h2 className="font-black text-3xl md:text-6xl tracking-tighter uppercase mb-6 md:mb-8 leading-tight text-black reveal-text">
+              Mr. Muthyal <br className="hidden md:block"/> <span className="text-gray-300">Ashwin Kumar</span>
             </h2>
-            <p className="text-gray-500 font-medium text-lg mb-10 leading-relaxed reveal-text">
+            <p className="text-gray-500 font-medium text-base md:text-lg mb-8 md:mb-10 leading-relaxed reveal-text">
               With over a decade of leadership in autonomous systems, Mr. Muthyal Ashwin Kumar founded ACBfly to revolutionize how goods and people move across the sky. His vision for a zero-failure, electric aerial network is the heartbeat of our technical innovation.
             </p>
-            <div className="flex gap-12 border-t border-gray-100 pt-10 reveal-text">
+            <div className="flex flex-col sm:flex-row gap-8 md:gap-12 border-t border-gray-100 pt-8 md:pt-10 reveal-text">
               <div>
                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2">Philosophy</span>
-                <p className="text-black font-bold text-sm">Safety-First Autonomous Design</p>
+                <p className="text-black font-bold text-sm md:text-base">Safety-First Autonomous Design</p>
               </div>
               <div>
                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2">Target</span>
-                <p className="text-black font-bold text-sm">Net-Zero Urban Logistics</p>
+                <p className="text-black font-bold text-sm md:text-base">Net-Zero Urban Logistics</p>
               </div>
             </div>
           </div>
@@ -176,28 +178,28 @@ const Service = () => {
       </section>
 
       {/* SECTION 4: CAPABILITY GRID */}
-      <section className="py-32 px-[6%] lg:px-[10%] bg-white">
-        <div className="mb-20 text-left border-l-4 border-black pl-8">
-          <p className="text-gray-400 font-bold tracking-[0.3em] text-xs uppercase mb-4 reveal-text">Core Operations</p>
-          <h2 className="font-black text-4xl md:text-6xl tracking-tight uppercase reveal-text text-black">Defining Capability</h2>
+      <section className="py-20 md:py-32 px-[6%] lg:px-[10%] bg-white">
+        <div className="mb-12 md:mb-20 text-left border-l-4 border-black pl-6 md:pl-8">
+          <p className="text-gray-400 font-bold tracking-[0.3em] text-[10px] md:text-xs uppercase mb-4 reveal-text">Core Operations</p>
+          <h2 className="font-black text-3xl md:text-6xl tracking-tight uppercase reveal-text text-black">Defining Capability</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {[
             { title: "Agriculture", desc: "Fully autonomous multispectral scanning and precision treatment protocols to maximize agricultural output.", tag: "Operational", icon: "M12 2L2 7l10 5 10-5-10-5zm0 9l2.95-1.476L12 17.5l-2.95-7.976L12 11zm-10 1L12 17l10-5v5l-10 5-10-5v-5z" },
             { title: "Medical", desc: "High-priority, zero-latency transport for critical medical assets, bypassing all ground-level constraints.", tag: "Operational", icon: "M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z" },
             { title: "Mobility", desc: "On-demand eVTOL charter services designed to compress hour-long urban commutes into minutes.", tag: "In Certification", highlight: true, icon: "M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" }
           ].map((card, i) => (
-            <div key={i} className={`p-12 rounded-3xl border transition-all duration-500 group reveal-text shadow-sm
+            <div key={i} className={`p-8 md:p-12 rounded-3xl border transition-all duration-500 group reveal-text shadow-sm text-left
               ${card.highlight 
                 ? 'bg-black border-black text-white' 
                 : 'bg-white border-gray-100 hover:border-black'
               }`}
             >
-              <svg className={`w-10 h-10 mb-8 ${card.highlight ? 'fill-white' : 'fill-black'}`} viewBox="0 0 24 24"><path d={card.icon}/></svg>
-              <h3 className="font-black text-2xl mb-4 tracking-tight uppercase">{card.title}</h3>
-              <p className={`text-sm leading-relaxed mb-10 font-medium ${card.highlight ? 'text-gray-400' : 'text-gray-500'}`}>{card.desc}</p>
-              <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border 
+              <svg className={`w-8 h-8 md:w-10 md:h-10 mb-6 md:mb-8 ${card.highlight ? 'fill-white' : 'fill-black'}`} viewBox="0 0 24 24"><path d={card.icon}/></svg>
+              <h3 className="font-black text-xl md:text-2xl mb-4 tracking-tight uppercase">{card.title}</h3>
+              <p className={`text-xs md:text-sm leading-relaxed mb-8 md:mb-10 font-medium ${card.highlight ? 'text-gray-400' : 'text-gray-500'}`}>{card.desc}</p>
+              <span className={`px-4 py-1.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest border 
                 ${card.highlight ? 'bg-white text-black border-white' : 'bg-gray-100 text-gray-500 border-gray-200'}`}>
                 {card.tag}
               </span>
@@ -207,47 +209,47 @@ const Service = () => {
       </section>
 
       {/* SECTION 5: DETAILED SERVICES */}
-      <section className="pb-32 px-[6%] lg:px-[10%] bg-[#FAFAFA]">
+      <section className="pb-20 md:pb-32 px-[6%] lg:px-[10%] bg-[#FAFAFA]">
         {detailedServices.map((service, index) => (
-          <div key={service.id} className={`service-row flex flex-col lg:flex-row gap-16 lg:gap-24 items-center mb-40 ${index % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}>
-            <div className="text-col flex-1 w-full">
-              <span className="text-7xl font-black text-gray-200 block mb-4 tracking-tighter">{service.id}</span>
-              <h2 className="font-black text-3xl md:text-5xl uppercase tracking-tighter mb-8 leading-none text-black">{service.title}</h2>
-              <p className="text-gray-500 font-medium text-lg mb-10 leading-relaxed">{service.desc}</p>
+          <div key={service.id} className={`service-row flex flex-col lg:flex-row gap-10 md:gap-16 lg:gap-24 items-center mb-24 md:mb-40 ${index % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}>
+            <div className="text-col flex-1 w-full text-left">
+              <span className="text-5xl md:text-7xl font-black text-gray-200 block mb-2 md:mb-4 tracking-tighter">{service.id}</span>
+              <h2 className="font-black text-2xl md:text-5xl uppercase tracking-tighter mb-6 md:mb-8 leading-none text-black">{service.title}</h2>
+              <p className="text-gray-500 font-medium text-base md:text-lg mb-8 md:mb-10 leading-relaxed">{service.desc}</p>
 
-              <div className="bg-white p-8 border border-gray-100 rounded-3xl mb-10 shadow-sm">
+              <div className="bg-white p-6 md:p-8 border border-gray-100 rounded-3xl mb-8 md:mb-10 shadow-sm">
                 <div className="mb-6">
-                  <span className="text-black text-[10px] font-black uppercase tracking-widest block mb-2 opacity-30">Operational Challenge</span>
+                  <span className="text-black text-[9px] md:text-[10px] font-black uppercase tracking-widest block mb-2 opacity-30">Operational Challenge</span>
                   <p className="text-gray-600 text-sm font-semibold leading-relaxed">{service.problem}</p>
                 </div>
                 <div className="h-px w-full bg-gray-100 mb-6"></div>
                 <div>
-                  <span className="text-black text-[10px] font-black uppercase tracking-widest block mb-2 opacity-30">Technical Solution</span>
+                  <span className="text-black text-[9px] md:text-[10px] font-black uppercase tracking-widest block mb-2 opacity-30">Technical Solution</span>
                   <p className="text-black text-sm font-bold leading-relaxed">{service.solution}</p>
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-3 mb-10">
+              <div className="flex flex-wrap gap-2 md:gap-3 mb-8 md:mb-10">
                 {service.steps.map((step, i) => (
-                  <div key={i} className="flex items-center text-[10px] font-black uppercase tracking-widest bg-white px-4 py-2 rounded-lg border border-gray-100 shadow-xs">
+                  <div key={i} className="flex items-center text-[9px] md:text-[10px] font-black uppercase tracking-widest bg-white px-3 md:px-4 py-2 rounded-lg border border-gray-100 shadow-xs">
                     {step}
-                    {i !== service.steps.length - 1 && <span className="ml-3 text-gray-300">/</span>}
+                    {i !== service.steps.length - 1 && <span className="ml-2 md:ml-3 text-gray-300">/</span>}
                   </div>
                 ))}
               </div>
 
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6 mb-10">
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 md:gap-y-4 gap-x-6 mb-8 md:mb-10">
                 {service.benefits.map((benefit, i) => (
-                  <li key={i} className="text-gray-600 text-sm font-bold flex items-start gap-3">
+                  <li key={i} className="text-gray-600 text-xs md:text-sm font-bold flex items-start gap-3">
                     <span className="text-black mt-1">●</span> {benefit}
                   </li>
                 ))}
               </ul>
 
-              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest border-t border-gray-100 pt-6 italic">{service.note}</p>
+              <p className="text-[9px] md:text-[10px] text-gray-400 font-bold uppercase tracking-widest border-t border-gray-100 pt-6 italic">{service.note}</p>
             </div>
 
-            <div className="img-col flex-1 h-[400px] md:h-[600px] w-full relative rounded-[2rem] overflow-hidden border border-gray-200 group bg-white shadow-xl">
+            <div className="img-col flex-1 h-[300px] md:h-[450px] lg:h-[600px] w-full relative rounded-[2rem] overflow-hidden border border-gray-200 group bg-white shadow-xl">
               <img src={service.img} alt={service.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105" />
             </div>
           </div>
@@ -255,9 +257,9 @@ const Service = () => {
       </section>
 
       {/* SECTION 6: CTA */}
-      <section className="min-h-[60vh] flex flex-col justify-center items-center text-center bg-white border-t border-gray-100 px-6">
-        <h2 className="font-black text-4xl md:text-7xl tracking-tighter uppercase mb-12 reveal-text text-black">Ready for <br/> <span className="text-gray-200">Takeoff</span></h2>
-        <button className="px-14 py-6 bg-black text-white font-black uppercase text-sm tracking-[0.2em] rounded-full hover:bg-gray-800 transition-all duration-500 shadow-xl active:scale-95 reveal-text">
+      <section className="min-h-[40vh] md:min-h-[60vh] flex flex-col justify-center items-center text-center bg-white border-t border-gray-100 px-6 py-20">
+        <h2 className="font-black text-4xl md:text-7xl tracking-tighter uppercase mb-8 md:mb-12 reveal-text text-black leading-tight">Ready for <br/> <span className="text-gray-200">Takeoff</span></h2>
+        <button className="px-10 md:px-14 py-4 md:py-6 bg-black text-white font-black uppercase text-xs md:text-sm tracking-[0.2em] rounded-full hover:bg-gray-800 transition-all duration-500 shadow-xl active:scale-95 reveal-text">
           Initiate Request
         </button>
       </section>
